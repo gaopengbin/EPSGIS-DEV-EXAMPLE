@@ -85,7 +85,7 @@
     "download": true,
     "children": [
       {
-        "name": "创建三维场景",
+        "name": "GeoJSON",
         "details": "演示 new XE.Earth() 构造场景",
         "children": [
           {
@@ -106,7 +106,7 @@
         ]
       },
       {
-        "name": "创建三维场景",
+        "name": "WMS",
         "details": "演示 new XE.Earth() 构造场景",
         "children": [
           {

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webgis</title>
+  <script src="lib/main.umd.cjs"></script>
+  <style>
+    .ol-map {
+      width: 50%;
+      height: 100%;
+    }
+
+    button {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      z-index: 9999;
+    }
+  </style>
+  <script type="module">
+    import * as test from '/test.js';
+    let config = {}
+    let map;
+    setTimeout(() => {
+      map = document.querySelector('ol-map').map;
+      console.log(map, mapToJSON(map));
+      config = mapToJSON(map);
+
+      let map2Div = document.querySelector('.map2');
+      // console.log(map2Div);
+    }, 1000);
+
+    function reload() {
+      config = mapToJSON(map);
+      let map2Div = document.querySelector('.map2');
+      let ol_map = document.createElement('ol-map');
+
+      ol_map.config = { map: config };
+      console.log(config);
+      ol_map.style = 'left:50%';
+      ol_map.className = 'map2';
+
+      map2Div.replaceWith(ol_map);
+
+    }
+    window.reload = reload;
+
+  </script>
+</head>
+
+<body>
+  <ol-map config="configs/ol.json"></ol-map>
+  <ol-map config="configs/ol.json" style="left:50%" class="map2"></ol-map>
+  <button onclick="reload()">reload</button>
+</body>
+
+</html>

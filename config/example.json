@@ -1,0 +1,152 @@
+[
+  {
+    "name": "快速开始",
+    "icon": "fa-globe",
+    "download": false,
+    "children": [
+      {
+        "name": "创建三维场景",
+        "details": "演示 new XE.Earth() 构造场景",
+        "children": [
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "根据配置文件创建地球",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/json"
+          },
+          {
+            "name": "原生Cesium来创建地球(可与第3方SDK结合使用)",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/cesium"
+          }
+        ]
+      },
+      {
+        "name": "创建三维场景",
+        "details": "演示 new XE.Earth() 构造场景",
+        "children": [
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "根据配置文件创建地球",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/json"
+          },
+          {
+            "name": "原生Cesium来创建地球(可与第3方SDK结合使用)",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/cesium"
+          }
+        ]
+      },
+      {
+        "name": "创建三维场景",
+        "details": "演示 new XE.Earth() 构造场景",
+        "children": [
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "根据配置文件创建地球",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/json"
+          },
+          {
+            "name": "原生Cesium来创建地球(可与第3方SDK结合使用)",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/cesium"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "图层加载",
+    "icon": "fa-th-list",
+    "download": true,
+    "children": [
+      {
+        "name": "GeoJSON",
+        "details": "演示 new XE.Earth() 构造场景",
+        "children": [
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "根据配置文件创建地球",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/json"
+          },
+          {
+            "name": "原生Cesium来创建地球(可与第3方SDK结合使用)",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/cesium"
+          }
+        ]
+      },
+      {
+        "name": "WMS",
+        "details": "演示 new XE.Earth() 构造场景",
+        "children": [
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "根据配置文件创建地球",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/json"
+          },
+          {
+            "name": "原生Cesium来创建地球(可与第3方SDK结合使用)",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/cesium"
+          }
+        ]
+      },
+      {
+        "name": "创建三维场景",
+        "details": "演示 new XE.Earth() 构造场景",
+        "children": [
+          {
+            "name": "快速创建地球",
+            "thumbnail": "map-create-quick.png",
+            "main": "map/create/quick"
+          },
+          {
+            "name": "根据配置文件创建地球",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/json"
+          },
+          {
+            "name": "原生Cesium来创建地球(可与第3方SDK结合使用)",
+            "thumbnail": "map-create-test.png",
+            "main": "map/create/cesium"
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+#Container1{
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+#Container2{
+    width: 100%;
+    height: 50%;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}

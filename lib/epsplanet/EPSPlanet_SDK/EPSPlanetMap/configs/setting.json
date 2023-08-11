@@ -1,0 +1,41 @@
+{
+    "include": [
+        "ol"
+    ],
+    "modules": {
+        "ol": [
+            {
+                "type": "css",
+                "url": "EPSPlanetMap/third_party/ol/ol.css"
+            },
+            {
+                "type": "js",
+                "url": "third_party/ol/ol.js"
+            },
+            {
+                "type": "js",
+                "url": "third_party/ol/olms.js"
+            },
+            {
+                "type": "css",
+                "url": "third_party/ol/ol-ext.css"
+            },
+            {
+                "type": "js",
+                "url": "third_party/ol/ol-ext.js"
+            },
+            {
+                "type": "css",
+                "url": "style.css"
+            },
+            {
+                "type": "css",
+                "url": "lib/ol/style.css"
+            },
+            {
+                "type": "js",
+                "url": "lib/ol/webgis-ol.umd.cjs"
+            }
+        ]
+    }
+}

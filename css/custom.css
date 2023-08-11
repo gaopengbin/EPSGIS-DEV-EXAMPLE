@@ -1,0 +1,7 @@
+.main-sidebar {
+    background-color: dodgerblue !important;
+}
+
+#charts-list .chart {
+    border-radius: 10px;
+}

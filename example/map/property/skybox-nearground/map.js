@@ -1,11 +1,12 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
-let currSkyBox // 当前生效的Skybox
-let defaultSkybox // cesium自带的Skybox
+var currSkyBox; // 当前生效的Skybox
+var defaultSkybox; // cesium自带的Skybox
 
-const qingtianSkybox = new mars3d.GroundSkyBox({
+var qingtianSkybox = new mars3d.GroundSkyBox({
   sources: {
     positiveX: "img/skybox_near/qingtian/rightav9.jpg",
     negativeX: "img/skybox_near/qingtian/leftav9.jpg",
@@ -14,9 +15,8 @@ const qingtianSkybox = new mars3d.GroundSkyBox({
     positiveZ: "img/skybox_near/qingtian/topav9.jpg",
     negativeZ: "img/skybox_near/qingtian/bottomav9.jpg"
   }
-})
-
-const wanxiaSkybox = new mars3d.GroundSkyBox({
+});
+var wanxiaSkybox = new mars3d.GroundSkyBox({
   sources: {
     positiveX: "img/skybox_near/wanxia/SunSetRight.png",
     negativeX: "img/skybox_near/wanxia/SunSetLeft.png",
@@ -25,9 +25,8 @@ const wanxiaSkybox = new mars3d.GroundSkyBox({
     positiveZ: "img/skybox_near/wanxia/SunSetUp.png",
     negativeZ: "img/skybox_near/wanxia/SunSetDown.png"
   }
-})
-
-const lantianSkybox = new mars3d.GroundSkyBox({
+});
+var lantianSkybox = new mars3d.GroundSkyBox({
   sources: {
     positiveX: "img/skybox_near/lantian/Right.jpg",
     negativeX: "img/skybox_near/lantian/Left.jpg",
@@ -36,12 +35,18 @@ const lantianSkybox = new mars3d.GroundSkyBox({
     positiveZ: "img/skybox_near/lantian/Up.jpg",
     negativeZ: "img/skybox_near/lantian/Down.jpg"
   }
-})
+});
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 31.830035, lng: 117.159801, alt: 409, heading: 41, pitch: 0 }
+    center: {
+      lat: 31.830035,
+      lng: 117.159801,
+      alt: 409,
+      heading: 41,
+      pitch: 0
+    }
     // scene: {
     //   skyBox: {
     //     type: "ground",
@@ -56,7 +61,7 @@ var mapOptions = {
     //   }
     // }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -65,26 +70,25 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
-  defaultSkybox = map.scene.skyBox
-  currSkyBox = qingtianSkybox
-
+  defaultSkybox = map.scene.skyBox;
+  currSkyBox = qingtianSkybox;
   map.on(mars3d.EventType.postRender, function () {
-    const position = map.camera.position
-    const height = Cesium.Cartographic.fromCartesian(position).height
+    var position = map.camera.position;
+    var height = Cesium.Cartographic.fromCartesian(position).height;
     if (height < 230000) {
       if (currSkyBox) {
-        map.scene.skyBox = currSkyBox
+        map.scene.skyBox = currSkyBox;
       }
-      map.scene.skyAtmosphere.show = false
+      map.scene.skyAtmosphere.show = false;
     } else {
       if (defaultSkybox) {
-        map.scene.skyBox = defaultSkybox
+        map.scene.skyBox = defaultSkybox;
       }
-      map.scene.skyAtmosphere.show = true
+      map.scene.skyAtmosphere.show = true;
     }
-  })
+  });
 }
 
 /**
@@ -92,21 +96,17 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function sunny() {
-  currSkyBox = qingtianSkybox
+  currSkyBox = qingtianSkybox;
 }
-
 function sunsetGlow() {
-  currSkyBox = wanxiaSkybox
+  currSkyBox = wanxiaSkybox;
 }
-
 function blueSky() {
-  currSkyBox = lantianSkybox
+  currSkyBox = lantianSkybox;
 }
-
 function defaultSky() {
-  currSkyBox = defaultSkybox
+  currSkyBox = defaultSkybox;
 }

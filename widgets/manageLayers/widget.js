@@ -1,2 +1,173 @@
-/* 2023-8-11 09:34:01 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
-function _typeof(e){return(_typeof="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function _classCallCheck(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}function _defineProperties(e,t){for(var o=0;o<t.length;o++){var n=t[o];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,_toPropertyKey(n.key),n)}}function _createClass(e,t,o){return t&&_defineProperties(e.prototype,t),o&&_defineProperties(e,o),Object.defineProperty(e,"prototype",{writable:!1}),e}function _toPropertyKey(e){e=_toPrimitive(e,"string");return"symbol"===_typeof(e)?e:String(e)}function _toPrimitive(e,t){if("object"!==_typeof(e)||null===e)return e;var o=e[Symbol.toPrimitive];if(void 0===o)return("string"===t?String:Number)(e);o=o.call(e,t||"default");if("object"!==_typeof(o))return o;throw new TypeError("@@toPrimitive must return a primitive value.")}function _inherits(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),Object.defineProperty(e,"prototype",{writable:!1}),t&&_setPrototypeOf(e,t)}function _setPrototypeOf(e,t){return(_setPrototypeOf=Object.setPrototypeOf?Object.setPrototypeOf.bind():function(e,t){return e.__proto__=t,e})(e,t)}function _createSuper(o){var n=_isNativeReflectConstruct();return function(){var e,t=_getPrototypeOf(o);return _possibleConstructorReturn(this,n?(e=_getPrototypeOf(this).constructor,Reflect.construct(t,arguments,e)):t.apply(this,arguments))}}function _possibleConstructorReturn(e,t){if(t&&("object"===_typeof(t)||"function"==typeof t))return t;if(void 0!==t)throw new TypeError("Derived constructors may only return object or undefined");return _assertThisInitialized(e)}function _assertThisInitialized(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}function _isNativeReflectConstruct(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Boolean.prototype.valueOf.call(Reflect.construct(Boolean,[],function(){})),!0}catch(e){return!1}}function _getPrototypeOf(e){return(_getPrototypeOf=Object.setPrototypeOf?Object.getPrototypeOf.bind():function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}!function(o){var e=function(){"use strict";_inherits(t,o.widget.BaseWidget);var e=_createSuper(t);function t(){return _classCallCheck(this,t),e.apply(this,arguments)}return _createClass(t,[{key:"view",get:function(){return{type:"window",url:"view.html",windowOptions:{width:250,height:500}}}},{key:"create",value:function(){}},{key:"winCreateOK",value:function(e,t){this.viewWindow=t}},{key:"activate",value:function(){this.map.on(o.EventType.addLayer,this._onAddLayerHandler,this),this.map.on(o.EventType.removeLayer,this._onRemoveLayerHandler,this)}},{key:"disable",value:function(){this.viewWindow=null,this.map.off(o.EventType.addLayer,this._onAddLayerHandler,this),this.map.off(o.EventType.removeLayer,this._onRemoveLayerHandler,this)}},{key:"_onAddLayerHandler",value:function(e){this.isActivate&&this.viewWindow&&(console.log("添加了图层",e),this.viewWindow.updateNode(e.layer))}},{key:"_onRemoveLayerHandler",value:function(e){this.isActivate&&this.viewWindow&&(console.log("移除了图层",e),this.viewWindow.removeNode(e.layer))}},{key:"getLayers",value:function(){return this.map.getLayers({basemaps:!0,layers:!0})}},{key:"checkClickLayer",value:function(e,t){t?(this.config.autoCenter&&!e.options.noCenter&&e.readyPromise.then(function(e){e.flyTo()}),(t=e.options).onWidget&&(this._lastWidget&&(o.widget.disable(this._lastWidget),this._lastWidget=null),o.widget.activate({uri:t.onWidget,layerItem:t,disableOther:!1}),this._lastWidget=t.onWidget)):(this.config.autoCenter&&!e.options.noCenter&&this.map.cancelFlight(),(t=e.options).onWidget&&(o.widget.disable(t.onWidget),this._lastWidget==t.onWidget)&&(this._lastWidget=null))}},{key:"updateLayerShow",value:function(e,t){(e.show=t)&&!e.isAdded&&(this.map.off(o.EventType.addLayer,this._onAddLayerHandler,this),this.map.addLayer(e),this.map.on(o.EventType.addLayer,this._onAddLayerHandler,this))}}]),t}();o.widget.bindClass(e)}((window,mars3d));
+/* 2023-8-14 06:23:05 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
+"use script" //开发环境建议开启严格模式
+;
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+(function (window, mars3d) {
+  //创建widget类，需要继承BaseWidget
+  var MyWidget = /*#__PURE__*/function (_mars3d$widget$BaseWi) {
+    "use strict";
+
+    _inherits(MyWidget, _mars3d$widget$BaseWi);
+    var _super = _createSuper(MyWidget);
+    function MyWidget() {
+      _classCallCheck(this, MyWidget);
+      return _super.apply(this, arguments);
+    }
+    _createClass(MyWidget, [{
+      key: "view",
+      get:
+      //弹窗配置
+      function get() {
+        return {
+          type: "window",
+          url: "view.html",
+          windowOptions: {
+            // noTitle: true,
+            // closeBtn: 0,
+            width: 250,
+            height: 500
+          }
+        };
+      }
+
+      //初始化[仅执行1次]
+    }, {
+      key: "create",
+      value: function create() {
+        //演示，监听事件
+        // mars3d.widget.on("checkLayer", (event) => {
+        //   if (!this.isActivate || !this.viewWindow) {
+        //     return;
+        //   }
+        //   var layer = event.layer;
+        //   this.viewWindow.updateNode(layer);
+        // });
+      }
+      //每个窗口创建完成后调用
+    }, {
+      key: "winCreateOK",
+      value: function winCreateOK(opt, result) {
+        this.viewWindow = result;
+      }
+      //打开激活
+    }, {
+      key: "activate",
+      value: function activate() {
+        //监听事件，联动勾选状态
+        this.map.on(mars3d.EventType.addLayer, this._onAddLayerHandler, this);
+        this.map.on(mars3d.EventType.removeLayer, this._onRemoveLayerHandler, this);
+      }
+      //关闭释放
+    }, {
+      key: "disable",
+      value: function disable() {
+        this.viewWindow = null;
+        this.map.off(mars3d.EventType.addLayer, this._onAddLayerHandler, this);
+        this.map.off(mars3d.EventType.removeLayer, this._onRemoveLayerHandler, this);
+      }
+    }, {
+      key: "_onAddLayerHandler",
+      value: function _onAddLayerHandler(e) {
+        if (!this.isActivate || !this.viewWindow) {
+          return;
+        }
+        console.log("添加了图层", e);
+        this.viewWindow.updateNode(e.layer);
+      }
+    }, {
+      key: "_onRemoveLayerHandler",
+      value: function _onRemoveLayerHandler(e) {
+        if (!this.isActivate || !this.viewWindow) {
+          return;
+        }
+        console.log("移除了图层", e);
+        this.viewWindow.removeNode(e.layer);
+      }
+    }, {
+      key: "getLayers",
+      value: function getLayers() {
+        return this.map.getLayers({
+          basemaps: true,
+          //是否取config.json中的basempas  ，因为有底图控制了，具体项目中可以按需改为false
+          layers: true //是否取config.json中的layers
+        });
+      }
+      //对单击的图层做处理（单个）
+    }, {
+      key: "checkClickLayer",
+      value: function checkClickLayer(layer, show) {
+        if (show) {
+          if (this.config.autoCenter && !layer.options.noCenter) {
+            //在对应config.json图层节点配置 noCenter:true 可以不定位
+            layer.readyPromise.then(function (layer) {
+              layer.flyTo();
+            });
+          }
+
+          //存在关联widget时
+          var item = layer.options;
+          if (item.onWidget) {
+            if (this._lastWidget) {
+              mars3d.widget.disable(this._lastWidget);
+              this._lastWidget = null;
+            }
+            mars3d.widget.activate({
+              uri: item.onWidget,
+              layerItem: item,
+              disableOther: false
+            });
+            this._lastWidget = item.onWidget;
+          }
+        } else {
+          if (this.config.autoCenter && !layer.options.noCenter) {
+            this.map.cancelFlight();
+          }
+
+          //存在关联widget时
+          var _item = layer.options;
+          if (_item.onWidget) {
+            mars3d.widget.disable(_item.onWidget);
+            if (this._lastWidget == _item.onWidget) {
+              this._lastWidget = null;
+            }
+          }
+        }
+      }
+
+      //更新图层:显示隐藏状态（勾选后的图层及其子级图层，多个）
+    }, {
+      key: "updateLayerShow",
+      value: function updateLayerShow(layer, show) {
+        layer.show = show;
+        if (show) {
+          if (!layer.isAdded) {
+            this.map.off(mars3d.EventType.addLayer, this._onAddLayerHandler, this);
+            this.map.addLayer(layer);
+            this.map.on(mars3d.EventType.addLayer, this._onAddLayerHandler, this);
+          }
+        } else {
+          // if (layer.isAdded) {
+          //   this.map.removeLayer(layer)
+          // }
+        }
+      }
+    }]);
+    return MyWidget;
+  }(mars3d.widget.BaseWidget); //注册到widget管理器中。
+  mars3d.widget.bindClass(MyWidget);
+
+  //每个widet之间都是直接引入到index.html中，会存在彼此命名冲突，所以闭包处理下。
+})(window, mars3d);

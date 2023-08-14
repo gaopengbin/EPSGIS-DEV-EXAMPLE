@@ -1,2 +1,394 @@
-/* 2023-8-11 09:34:01 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
-var thisWidget,lastRightClickTreeId,lastRightClickTreeNode,layers=[],layersObj={};function initWidgetView(e){thisWidget=e,bindRightMenuEvnet();for(var e={check:{enable:!0},data:{simpleData:{enable:!0}},callback:{onCheck:treeOverlays_onCheck,onRightClick:treeOverlays_OnRightClick,onDblClick:treeOverlays_onDblClick,onClick:treeOverlays_onClick},view:{addDiyDom:addOpacityRangeDom}},n=[],t=(layers=thisWidget.getLayers()).length-1;0<=t;t--){var d=_getNodeConfig(layers[t]);d&&n.push(d)}$.fn.zTree.init($("#treeOverlays"),e,n)}function _getNodeConfig(e){if(null!=e&&e.options&&!e.isPrivate){var n,t=e.options;if(t.name&&"未命名"!=t.name)return n={id:e.id,pId:e.pid,name:e.name,checked:e.isAdded&&e.show},e.hasEmptyGroup?(n.icon="img/folder.png",n.open=null==t.open||t.open):e.hasChildLayer?(n.icon="img/layerGroup.png",n.open=null==t.open||t.open):(n.icon="img/layer.png",e.parent&&(n._parentId=e.parent.id)),layersObj[n.id]=e,n;console.log("未命名图层不加入图层管理",e)}}function addNode(e){var n,t=$.fn.zTree.getZTreeObj("treeOverlays"),d=(e.pid&&-1!=e.pid&&(n=t.getNodeByParam("id",e.pid,null)),_getNodeConfig(e));d&&(t.addNodes(n,0,[d],!0),e.hasChildLayer)&&e.eachLayer(function(e){removeNode(e),addNode(e)})}function removeNode(e){var n=$.fn.zTree.getZTreeObj("treeOverlays"),e=n.getNodeByParam("id",e.id,null);e&&n.removeNode(e)}function updateNode(e){var n=$.fn.zTree.getZTreeObj("treeOverlays"),t=n.getNodeByParam("id",e.id,null),d=e.isAdded&&e.show;t?t.checked!=d&&(t.checkedOld=t.checked,t.checked=d,n.updateNode(t)):addNode(e,d)}function treeOverlays_onClick(e,n,t,d){}function treeOverlays_onDblClick(e,n,t){null!=t&&null!=t.id&&(t=layersObj[t.id])&&t.show&&t.flyTo()}function removeArrayItem(e,n){for(var t=0;t<e.length;t++)if(e[t]==n)return e.splice(t,1),!0;return!1}function treeOverlays_onCheck(e,n,t){var d=$.fn.zTree.getZTreeObj(n),a=d.getChangeCheckedNodes();removeArrayItem(a,t),a.push(t);for(var r=0;r<a.length;r++){var o=a[r];if(o.checkedOld=o.checked,1!=o.check_Child_State){var i=layersObj[o.id];if(null!=i){if(o.checked?$("#slider"+o.tId).css("display",""):$("#slider"+o.tId).css("display","none"),i.options.radio&&o.checked)for(var l=d.getNodesByFilter(function(e){var n=layersObj[e.id];return n.options.radio&&n.pid==i.pid&&e.id!=o.id},!1,o.getParentNode()),c=0;c<l.length;c++)l[c].checkedOld=!1,d.checkNode(l[c],!1,!0),$("#"+l[c].tId+"_range").hide(),layersObj[l[c].id].show=!1;thisWidget.updateLayerShow(i,o.checked)}}}n=layersObj[t.id];n&&thisWidget.checkClickLayer(n,t.checked)}function addOpacityRangeDom(e,n){var t,d,a=layersObj[n.id];a&&a.hasOpacity&&(t=$("#"+n.tId),d='<input id="'+n.tId+'_range" style="display:none" />',t.append(d),$("#"+n.tId+"_range").slider({id:"slider"+n.tId,min:0,max:100,step:1,value:100*(a.opacity||1)}).on("change",function(e){e=e.value.newValue/100;layersObj[n.id].opacity=e}),n.checked||$("#slider"+n.tId).css("display","none"))}function treeOverlays_OnRightClick(e,n,t){var d;null!=t&&(d=layersObj[t.id])&&d.hasZIndex&&(lastRightClickTreeId=n,lastRightClickTreeNode=t,d=e.clientY,n=e.clientX,(t=document.body.offsetHeight-100)<d&&(d=t),(e=document.body.offsetWidth-100)<n&&(n=e),$("#content_layer_manager_rMenu").css({top:d+"px",left:n+"px"}).show(),$("body").bind("mousedown",onBodyMouseDown))}function onBodyMouseDown(e){"content_layer_manager_rMenu"==e.target.id||0<$(e.target).parents("#content_layer_manager_rMenu").length||hideRMenu()}function hideRMenu(){$("body").unbind("mousedown",onBodyMouseDown),$("#content_layer_manager_rMenu").hide()}function bindRightMenuEvnet(){$("#content_layer_manager_rMenu li").on("click",function(){hideRMenu(),moveNodeAndLayer($(this).attr("data-type"))})}function moveNodeAndLayer(e){var n=$.fn.zTree.getZTreeObj(lastRightClickTreeId),t=lastRightClickTreeNode.getParentNode(),d=null==t?n.getNodes():t.children,a=lastRightClickTreeNode,r=layersObj[a.id];switch(e){case"up":var o=a.getPreNode();o&&(n.moveNode(o,a,"prev"),exchangeLayer(r,layersObj[o.id]));break;case"top":if(0==a.getIndex())return;for(;0<a.getIndex();){var i=a.getPreNode();i&&(n.moveNode(i,a,"prev"),exchangeLayer(r,layersObj[i.id]))}break;case"down":o=a.getNextNode();o&&(n.moveNode(o,a,"next"),exchangeLayer(r,layersObj[o.id]));break;case"bottom":if(a.getIndex()==d.length-1)return;for(;a.getIndex()<d.length-1;){var l=a.getNextNode();l&&(n.moveNode(l,a,"next"),exchangeLayer(r,layersObj[l.id]))}}layers.sort(function(e,n){return e.zIndex-n.zIndex})}function exchangeLayer(e,n){var t;null!=e&&null!=n&&(t=e.zIndex,e.zIndex=n.zIndex,n.zIndex=t,console.log("".concat(e.name,":").concat(e.zIndex,",  ").concat(n.name,":").concat(n.zIndex)))}function updateCheckd(e,n){var t=$.fn.zTree.getZTreeObj("treeOverlays"),d=t.getNodesByParam("name",e,null);d&&0<d.length?t.checkNode(d[0],n,!1):console.log("未在图层树上找到图层“"+e+"”，无法自动勾选处理")}
+/* 2023-8-14 06:23:05 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
+"use script";
+
+//开发环境建议开启严格模式
+
+//对应widget.js中MyWidget实例化后的对象
+var thisWidget;
+var layers = [];
+var layersObj = {};
+
+//当前页面业务
+function initWidgetView(_thisWidget) {
+  thisWidget = _thisWidget;
+
+  //右键
+  bindRightMenuEvnet();
+
+  //初始化树
+  var setting = {
+    check: {
+      enable: true
+    },
+    data: {
+      simpleData: {
+        enable: true
+      }
+    },
+    callback: {
+      onCheck: treeOverlays_onCheck,
+      onRightClick: treeOverlays_OnRightClick,
+      onDblClick: treeOverlays_onDblClick,
+      onClick: treeOverlays_onClick
+    },
+    view: {
+      addDiyDom: addOpacityRangeDom
+    }
+  };
+  var zNodes = [];
+  layers = thisWidget.getLayers();
+  for (var i = layers.length - 1; i >= 0; i--) {
+    var node = _getNodeConfig(layers[i]);
+    if (node) {
+      zNodes.push(node);
+    }
+  }
+  $.fn.zTree.init($("#treeOverlays"), setting, zNodes);
+}
+function _getNodeConfig(layer) {
+  if (layer == null || !layer.options || layer.isPrivate) {
+    return;
+  }
+  var item = layer.options;
+  if (!item.name || item.name == "未命名") {
+    console.log("未命名图层不加入图层管理", layer);
+    return;
+  }
+  var node = {
+    id: layer.id,
+    pId: layer.pid,
+    name: layer.name,
+    checked: layer.isAdded && layer.show
+  };
+  if (layer.hasEmptyGroup) {
+    //空数组
+    node.icon = "img/folder.png";
+    node.open = item.open == null ? true : item.open;
+  } else if (layer.hasChildLayer) {
+    //有子节点的数组
+    node.icon = "img/layerGroup.png";
+    node.open = item.open == null ? true : item.open;
+  } else {
+    node.icon = "img/layer.png";
+    if (layer.parent) {
+      node._parentId = layer.parent.id;
+    }
+  }
+  //记录图层
+  layersObj[node.id] = layer;
+  return node;
+}
+function addNode(item) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeOverlays");
+  var parentNode;
+  if (item.pid && item.pid != -1) {
+    parentNode = treeObj.getNodeByParam("id", item.pid, null);
+  }
+  var node = _getNodeConfig(item);
+  if (!node) {
+    return;
+  }
+  treeObj.addNodes(parentNode, 0, [node], true);
+
+  //更新子节点图层
+  if (item.hasChildLayer) {
+    item.eachLayer(function (childLayer) {
+      removeNode(childLayer);
+      addNode(childLayer);
+    });
+  }
+}
+function removeNode(layer) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeOverlays");
+  var node = treeObj.getNodeByParam("id", layer.id, null);
+  if (node) {
+    treeObj.removeNode(node);
+  }
+}
+function updateNode(layer) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeOverlays");
+  var node = treeObj.getNodeByParam("id", layer.id, null);
+  var show = layer.isAdded && layer.show;
+  if (node) {
+    //更新node
+    if (node.checked == show) {
+      return;
+    }
+    node.checkedOld = node.checked;
+    node.checked = show;
+    treeObj.updateNode(node);
+  } else {
+    addNode(layer, show);
+  }
+}
+
+//===================================双击定位图层====================================
+function treeOverlays_onClick(e, treeId, treeNode, clickFlag) {
+  // if (treeNode == null || treeNode.id == null) {
+  //   return
+  // }
+  // var layer = layersObj[treeNode.id]
+  // if (layer) {
+  //   thisWidget.checkClickLayer(layer, treeNode.checked)
+  // }
+}
+function treeOverlays_onDblClick(event, treeId, treeNode) {
+  if (treeNode == null || treeNode.id == null) {
+    return;
+  }
+  var layer = layersObj[treeNode.id];
+  if (layer && layer.show) {
+    layer.flyTo();
+  }
+}
+
+//===================================勾选显示隐藏图层====================================
+function removeArrayItem(arr, val) {
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == val) {
+      arr.splice(i, 1);
+      return true;
+    }
+  }
+  return false;
+}
+function treeOverlays_onCheck(e, treeId, chktreeNode) {
+  var treeObj = $.fn.zTree.getZTreeObj(treeId);
+  //获得所有改变check状态的节点
+  var changedNodes = treeObj.getChangeCheckedNodes();
+  removeArrayItem(changedNodes, chktreeNode);
+  changedNodes.push(chktreeNode);
+  for (var i = 0; i < changedNodes.length; i++) {
+    var treeNode = changedNodes[i];
+    treeNode.checkedOld = treeNode.checked;
+    if (treeNode.check_Child_State == 1) {
+      // 0:无子节点被勾选,  1:部分子节点被勾选,  2:全部子节点被勾选, -1:不存在子节点 或 子节点全部设置为 nocheck = true
+      continue;
+    }
+    var layer = layersObj[treeNode.id];
+    if (layer == null) {
+      continue;
+    }
+
+    //显示隐藏透明度设置view
+    if (treeNode.checked) {
+      $("#slider" + treeNode.tId).css("display", "");
+    } else {
+      $("#slider" + treeNode.tId).css("display", "none");
+    }
+
+    //特殊处理同目录下的单选的互斥的节点，可在config对应图层节点中配置"radio":true即可
+    if (layer.options.radio && treeNode.checked) {
+      var nodes = treeObj.getNodesByFilter(function (node) {
+        var item = layersObj[node.id];
+        return item.options.radio && item.pid == layer.pid && node.id != treeNode.id;
+      }, false, treeNode.getParentNode());
+      for (var nidx = 0; nidx < nodes.length; nidx++) {
+        nodes[nidx].checkedOld = false;
+        treeObj.checkNode(nodes[nidx], false, true);
+        $("#" + nodes[nidx].tId + "_range").hide();
+        var layertmp = layersObj[nodes[nidx].id];
+        layertmp.show = false;
+      }
+    }
+
+    //处理图层显示隐藏
+    thisWidget.updateLayerShow(layer, treeNode.checked);
+  }
+  var layerThis = layersObj[chktreeNode.id];
+  if (layerThis) {
+    thisWidget.checkClickLayer(layerThis, chktreeNode.checked);
+  }
+}
+
+//===================================透明度设置====================================
+
+//在节点后添加自定义控件
+function addOpacityRangeDom(treeId, tNode) {
+  //if (tNode.icon == "images/folder.png") return;
+
+  var layer = layersObj[tNode.id];
+  if (!layer || !layer.hasOpacity) {
+    return;
+  }
+  var view = $("#" + tNode.tId);
+  var silder = '<input id="' + tNode.tId + '_range" style="display:none" />';
+  view.append(silder);
+  $("#" + tNode.tId + "_range").slider({
+    id: "slider" + tNode.tId,
+    min: 0,
+    max: 100,
+    step: 1,
+    value: (layer.opacity || 1) * 100
+  }).on("change", function (e) {
+    var opacity = e.value.newValue / 100;
+    var layer = layersObj[tNode.id];
+    //设置图层的透明度
+    // thisWidget.udpateLayerOpacity(layer, opacity)
+    layer.opacity = opacity;
+  });
+  if (!tNode.checked) {
+    $("#slider" + tNode.tId).css("display", "none");
+  }
+}
+
+//===================================右键菜单====================================
+var lastRightClickTreeId;
+var lastRightClickTreeNode;
+function treeOverlays_OnRightClick(event, treeId, treeNode) {
+  if (treeNode == null) {
+    return;
+  }
+  var layer = layersObj[treeNode.id];
+  if (!layer || !layer.hasZIndex) {
+    return;
+  }
+
+  //右击时的节点
+  lastRightClickTreeId = treeId;
+  lastRightClickTreeNode = treeNode;
+  var top = event.clientY;
+  var left = event.clientX;
+  var maxtop = document.body.offsetHeight - 100;
+  var maxleft = document.body.offsetWidth - 100;
+  if (top > maxtop) {
+    top = maxtop;
+  }
+  if (left > maxleft) {
+    left = maxleft;
+  }
+  $("#content_layer_manager_rMenu").css({
+    top: top + "px",
+    left: left + "px"
+  }).show();
+  $("body").bind("mousedown", onBodyMouseDown);
+}
+function onBodyMouseDown(event) {
+  if (!(event.target.id == "content_layer_manager_rMenu" || $(event.target).parents("#content_layer_manager_rMenu").length > 0)) {
+    hideRMenu();
+  }
+}
+function hideRMenu() {
+  $("body").unbind("mousedown", onBodyMouseDown);
+  $("#content_layer_manager_rMenu").hide();
+}
+function bindRightMenuEvnet() {
+  $("#content_layer_manager_rMenu li").on("click", function () {
+    hideRMenu();
+    var type = $(this).attr("data-type");
+    moveNodeAndLayer(type);
+  });
+}
+
+//移动节点及图层位置
+function moveNodeAndLayer(type) {
+  var treeObj = $.fn.zTree.getZTreeObj(lastRightClickTreeId);
+
+  //获得当前节点的所有同级节点
+  var childNodes;
+  var parent = lastRightClickTreeNode.getParentNode();
+  if (parent == null) {
+    childNodes = treeObj.getNodes();
+  } else {
+    childNodes = parent.children;
+  }
+  var thisNode = lastRightClickTreeNode;
+  var thisLayer = layersObj[thisNode.id];
+  switch (type) {
+    default:
+      break;
+    case "up":
+      //图层上移一层
+      {
+        var moveNode = thisNode.getPreNode();
+        if (moveNode) {
+          treeObj.moveNode(moveNode, thisNode, "prev");
+          var moveLayer = layersObj[moveNode.id];
+          exchangeLayer(thisLayer, moveLayer);
+        }
+      }
+      break;
+    case "top":
+      //图层置于顶层
+      {
+        if (thisNode.getIndex() == 0) {
+          return;
+        }
+        while (thisNode.getIndex() > 0) {
+          //冒泡交换
+          var _moveNode = thisNode.getPreNode();
+          if (_moveNode) {
+            treeObj.moveNode(_moveNode, thisNode, "prev");
+            var _moveLayer = layersObj[_moveNode.id];
+            exchangeLayer(thisLayer, _moveLayer);
+          }
+        }
+      }
+      break;
+    case "down":
+      //图层下移一层
+      {
+        var _moveNode2 = thisNode.getNextNode();
+        if (_moveNode2) {
+          treeObj.moveNode(_moveNode2, thisNode, "next");
+          var _moveLayer2 = layersObj[_moveNode2.id];
+          exchangeLayer(thisLayer, _moveLayer2);
+        }
+      }
+      break;
+    case "bottom":
+      //图层置于底层
+      {
+        if (thisNode.getIndex() == childNodes.length - 1) {
+          return;
+        }
+        while (thisNode.getIndex() < childNodes.length - 1) {
+          //冒泡交换
+          var _moveNode3 = thisNode.getNextNode();
+          if (_moveNode3) {
+            treeObj.moveNode(_moveNode3, thisNode, "next");
+            var _moveLayer3 = layersObj[_moveNode3.id];
+            exchangeLayer(thisLayer, _moveLayer3);
+          }
+        }
+      }
+      break;
+  }
+
+  //按order重新排序
+  layers.sort(function (a, b) {
+    return a.zIndex - b.zIndex;
+  });
+}
+
+/**
+ * 交换相邻的图层 ： layer1 待移动图层 ，layer2 移动目标图层
+ */
+function exchangeLayer(layer1, layer2) {
+  if (layer1 == null || layer2 == null) {
+    return;
+  }
+  var or = layer1.zIndex;
+  layer1.zIndex = layer2.zIndex; //向上移动
+  layer2.zIndex = or; //向下移动
+
+  console.log("".concat(layer1.name, ":").concat(layer1.zIndex, ",  ").concat(layer2.name, ":").concat(layer2.zIndex));
+
+  // //向上移动
+  // thisWidget.udpateLayerZIndex(layer1, layer1.zIndex)
+  // //向下移动
+  // thisWidget.udpateLayerZIndex(layer2, layer2.zIndex)
+}
+
+//===================================其他====================================
+
+//地图图层添加移除监听，自动勾选
+function updateCheckd(name, checked) {
+  var treeObj = $.fn.zTree.getZTreeObj("treeOverlays");
+  var nodes = treeObj.getNodesByParam("name", name, null);
+  if (nodes && nodes.length > 0) {
+    treeObj.checkNode(nodes[0], checked, false);
+  } else {
+    console.log("未在图层树上找到图层“" + name + "”，无法自动勾选处理");
+  }
+}

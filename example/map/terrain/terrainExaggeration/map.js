@@ -1,13 +1,20 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 32.086616, lng: 118.731447, alt: 97704, heading: 244, pitch: -22 }
+    center: {
+      lat: 32.086616,
+      lng: 118.731447,
+      alt: 97704,
+      heading: 244,
+      pitch: -22
+    }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -16,9 +23,9 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
-  map.scene.globe.terrainExaggeration = 10 // 修改地形夸张程度
+  map.scene.globe.terrainExaggeration = 10; // 修改地形夸张程度
 }
 
 /**
@@ -26,7 +33,7 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
 
 /**
@@ -35,5 +42,5 @@ function onUnmounted() {
  * @returns {void}
  */
 function changeTerrain(val) {
-  map.scene.globe.terrainExaggeration = val
+  map.scene.globe.terrainExaggeration = val;
 }

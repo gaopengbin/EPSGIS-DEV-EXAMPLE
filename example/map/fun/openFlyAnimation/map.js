@@ -1,6 +1,7 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -9,9 +10,9 @@ var map // mars3d.Map三维地图对象
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
-  startAnimation()
+  startAnimation();
 }
 
 /**
@@ -19,22 +20,22 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function startAnimation() {
-  map.flyHome({ duration: 0 })
+  map.flyHome({
+    duration: 0
+  });
 
   // 开场动画
   map.openFlyAnimation({
     // duration1:4,
     // easingFunction1: Cesium.EasingFunction.QUINTIC_IN_OUT,
-    callback: function () {
+    callback: function callback() {
       // 动画播放完成后回调
     }
-  })
+  });
 }
-
 function stopAnimation() {
-  map.camera.cancelFlight()
+  map.camera.cancelFlight();
 }

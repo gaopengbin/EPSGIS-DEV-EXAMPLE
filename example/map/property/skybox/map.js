@@ -1,16 +1,23 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 36.873519, lng: 106.863496, alt: 19999205, heading: 354, pitch: -89 },
+    center: {
+      lat: 36.873519,
+      lng: 106.863496,
+      alt: 19999205,
+      heading: 354,
+      pitch: -89
+    },
     cameraController: {
       maximumZoomDistance: 50000000
     }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -19,9 +26,9 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
-  show6()
+  show6();
 }
 
 /**
@@ -29,9 +36,8 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function show1() {
   // 修改天空盒
   map.scene.skyBox = new Cesium.SkyBox({
@@ -43,9 +49,8 @@ function show1() {
       positiveY: "img/skybox/1/tycho2t3_80_py.jpg",
       positiveZ: "img/skybox/1/tycho2t3_80_pz.jpg"
     }
-  })
+  });
 }
-
 function show2() {
   // 修改天空盒
   map.scene.skyBox = new Cesium.SkyBox({
@@ -57,9 +62,8 @@ function show2() {
       positiveY: "img/skybox/2/tycho2t3_80_py.jpg",
       positiveZ: "img/skybox/2/tycho2t3_80_pz.jpg"
     }
-  })
+  });
 }
-
 function show3() {
   map.scene.skyBox = new Cesium.SkyBox({
     sources: {
@@ -70,9 +74,8 @@ function show3() {
       positiveY: "img/skybox/3/tycho2t3_80_py.jpg",
       positiveZ: "img/skybox/3/tycho2t3_80_pz.jpg"
     }
-  })
+  });
 }
-
 function show4() {
   map.scene.skyBox = new Cesium.SkyBox({
     sources: {
@@ -83,9 +86,8 @@ function show4() {
       positiveY: "img/skybox/4/tycho2t3_80_py.jpg",
       positiveZ: "img/skybox/4/tycho2t3_80_pz.jpg"
     }
-  })
+  });
 }
-
 function show5() {
   map.scene.skyBox = new Cesium.SkyBox({
     sources: {
@@ -96,9 +98,8 @@ function show5() {
       positiveY: "img/skybox/5/tycho2t3_80_py.jpg",
       positiveZ: "img/skybox/5/tycho2t3_80_pz.jpg"
     }
-  })
+  });
 }
-
 function show6() {
   map.scene.skyBox = new Cesium.SkyBox({
     sources: {
@@ -109,5 +110,5 @@ function show6() {
       positiveY: "img/skybox/6/tycho2t3_80_py.jpg",
       positiveZ: "img/skybox/6/tycho2t3_80_pz.jpg"
     }
-  })
+  });
 }

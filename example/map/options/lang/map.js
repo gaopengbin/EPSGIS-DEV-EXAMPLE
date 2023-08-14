@@ -1,9 +1,10 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
-let drawLayer
-let measure
+var drawLayer;
+var measure;
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
@@ -16,22 +17,32 @@ var mapOptions = {
     fullscreenButton: true,
     geocoder: "gaode",
     baseLayerPicker: true,
-    clockAnimate: true, // 时钟动画控制(左下角)
-    timeline: true, // 是否显示时间线控件
+    clockAnimate: true,
+    // 时钟动画控制(左下角)
+    timeline: true,
+    // 是否显示时间线控件
 
-    contextmenu: { hasDefault: true }, // 涉及到多语言的模块：右键菜单
-    compass: { top: "10px", left: "5px" },
-    distanceLegend: { left: "180px", bottom: "30px" },
+    contextmenu: {
+      hasDefault: true
+    },
+    // 涉及到多语言的模块：右键菜单
+    compass: {
+      top: "10px",
+      left: "5px"
+    },
+    distanceLegend: {
+      left: "180px",
+      bottom: "30px"
+    },
     locationBar: {
       fps: true,
-      template:
-        "<div>lng:{lng}</div> <div>lat:{lat}</div> <div>alt：{alt} m</div> <div>level：{level}</div><div>heading：{heading}°</div> <div>pitch：{pitch}°</div><div>cameraHeight：{cameraHeight}m</div>"
+      template: "<div>lng:{lng}</div> <div>lat:{lat}</div> <div>alt：{alt} m</div> <div>level：{level}</div><div>heading：{heading}°</div> <div>pitch：{pitch}°</div><div>cameraHeight：{cameraHeight}m</div>"
     }
   },
   lang: mars3d.LangType.EN // 使用英文
-}
+};
 
-var eventTarget = new mars3d.BaseClass()
+var eventTarget = new mars3d.BaseClass();
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -40,42 +51,39 @@ var eventTarget = new mars3d.BaseClass()
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance
-
-  map.toolbar.style.bottom = "55px" // 修改toolbar控件的样式
+  map = mapInstance;
+  map.toolbar.style.bottom = "55px"; // 修改toolbar控件的样式
 
   // 涉及到多语言的模块：标绘提示
   drawLayer = new mars3d.layer.GraphicLayer({
     hasEdit: true,
     isAutoEditing: true // 绘制完成后是否自动激活编辑
-  })
-  map.addLayer(drawLayer)
+  });
 
-  drawLayer.bindContextMenu([
-    {
-      text: map.getLangText("_删除"),
-      icon: "fa fa-trash-o",
-      show: (event) => {
-        const graphic = event.graphic
-        if (!graphic || graphic.isDestroy) {
-          return false
-        } else {
-          return true
-        }
-      },
-      callback: (e) => {
-        const graphic = e.graphic
-        if (!graphic) {
-          return
-        }
-        const parent = graphic.parent // 右击是编辑点时
-        drawLayer.removeGraphic(graphic)
-        if (parent) {
-          drawLayer.removeGraphic(parent)
-        }
+  map.addLayer(drawLayer);
+  drawLayer.bindContextMenu([{
+    text: map.getLangText("_删除"),
+    icon: "fa fa-trash-o",
+    show: function show(event) {
+      var graphic = event.graphic;
+      if (!graphic || graphic.isDestroy) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return;
+      }
+      var parent = graphic.parent; // 右击是编辑点时
+      drawLayer.removeGraphic(graphic);
+      if (parent) {
+        drawLayer.removeGraphic(parent);
       }
     }
-  ])
+  }]);
 
   // 涉及到多语言的模块：图上量算
   measure = new mars3d.thing.Measure({
@@ -86,8 +94,8 @@ function onMounted(mapInstance) {
       font_size: 20,
       background: false
     }
-  })
-  map.addThing(measure)
+  });
+  map.addThing(measure);
 }
 
 /**
@@ -95,31 +103,27 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function distance() {
-  drawLayer.stopDraw()
-  measure.distance()
+  drawLayer.stopDraw();
+  measure.distance();
 }
-
 function area() {
-  drawLayer.stopDraw()
-  measure.area()
+  drawLayer.stopDraw();
+  measure.area();
 }
-
 function height() {
-  drawLayer.stopDraw()
-  measure.heightTriangle()
+  drawLayer.stopDraw();
+  measure.heightTriangle();
 }
-
 function coordinate() {
-  drawLayer.stopDraw()
-  measure.point()
+  drawLayer.stopDraw();
+  measure.point();
 }
 function angle() {
-  drawLayer.stopDraw()
-  measure.angle()
+  drawLayer.stopDraw();
+  measure.angle();
 }
 
 /**
@@ -130,12 +134,12 @@ function angle() {
  * @returns {void} 无
  */
 function startDraw(type) {
-  measure.stopDraw()
+  measure.stopDraw();
   drawLayer.startDraw({
     type: type,
     style: {
       color: "#00ffff",
       opacity: 0.6
     }
-  })
+  });
 }

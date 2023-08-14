@@ -1,2 +1,483 @@
-/* 2023-8-11 09:34:00 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
-function bindLayerPopup2(){graphicLayer.bindPopup(function(e){var t=getAttrForEvent(e);return t["类型"]=null==(e=e.graphic)?void 0:e.type,t["来源"]="我是layer上绑定的Popup",t["备注"]="我支持鼠标交互",mars3d.Util.getTemplateHtml({title:"矢量图层",template:"all",attr:t})},{pointerEvents:!0})}function bindLayerContextMenu2(){graphicLayer.bindContextMenu([{text:"开始编辑对象",icon:"fa fa-edit",show:function(e){e=e.graphic;return!(!e||!e.hasEdit||e.isEditing)},callback:function(e){e=e.graphic;if(!e)return!1;e&&graphicLayer.startEditing(e)}},{text:"停止编辑对象",icon:"fa fa-edit",show:function(e){e=e.graphic;return!(!e||!e.hasEdit)&&e.isEditing},callback:function(e){e=e.graphic;if(!e)return!1;e&&e.stopEditing()}},{text:"删除对象",icon:"fa fa-trash-o",show:function(e){e=e.graphic;return!(!e||e.isDestroy)},callback:function(e){var t,e=e.graphic;e&&(t=e.parent,graphicLayer.removeGraphic(e),t)&&graphicLayer.removeGraphic(t)}},{text:"计算长度",icon:"fa fa-medium",show:function(e){e=e.graphic;return!!e&&("polyline"===e.type||"polylineP"===e.type||"curve"===e.type||"curveP"===e.type||"polylineVolume"===e.type||"polylineVolumeP"===e.type||"corridor"===e.type||"corridorP"===e.type||"wall"===e.type||"wallP"===e.type)},callback:function(e){e=e.graphic,e=mars3d.MeasureUtil.formatDistance(e.distance);haoutil.alert("该对象的长度为:"+e)}},{text:"计算周长",icon:"fa fa-medium",show:function(e){e=e.graphic;return!!e&&("circle"===e.type||"circleP"===e.type||"rectangle"===e.type||"rectangleP"===e.type||"polygon"===e.type||"polygonP"===e.type)},callback:function(e){e=e.graphic,e=mars3d.MeasureUtil.formatDistance(e.distance);haoutil.alert("该对象的周长为:"+e)}},{text:"计算面积",icon:"fa fa-reorder",show:function(e){e=e.graphic;return!!e&&("circle"===e.type||"circleP"===e.type||"rectangle"===e.type||"rectangleP"===e.type||"polygon"===e.type||"polygonP"===e.type||"scrollWall"===e.type||"water"===e.type)},callback:function(e){e=e.graphic,e=mars3d.MeasureUtil.formatArea(e.area);haoutil.alert("该对象的面积为:"+e)}}])}function getAttrForEvent(e){var t;return null!=e&&null!=(t=e.graphic)&&t.attr?e.graphic.attr:e.czmObject&&null!=(e=t=(t=e.czmObject._attr||e.czmObject.properties||e.czmObject.attribute)&&t.type&&t.attr?t.attr:t)?e:{}}function onClickAddRandomGraohic(e){haoutil.loading.show();var t=(new Date).getTime(),a=addRandomGraphicByCount(e);haoutil.loading.close();t=((new Date).getTime()-t)/1e3;window.layer.msg("生成".concat(a||e,"条数据，共耗时").concat(t.toFixed(2),"秒")),graphicLayer.flyTo({duration:0,heading:0,pitch:-40,scale:1.2})}function onClickImpFile(e){var t,a=e.name,a=a.substring(a.lastIndexOf(".")+1,a.length).toLowerCase();"json"==a||"geojson"==a?((t=new FileReader).readAsText(e,"UTF-8"),t.onloadend=function(e){var t=JSON.parse(this.result);"graphic"==t.type&&t.data?(graphicLayer.addGraphic(t.data),graphicLayer.flyTo()):(t=simplifyGeoJSON(t),graphicLayer.loadGeoJSON(t,{flyTo:!0})),clearSelectFile(),refreshTabel(graphicLayer)}):"kml"==a?((t=new FileReader).readAsText(e,"UTF-8"),t.onloadend=function(e){var t=this.result;kgUtil.toGeoJSON(t).then(function(e){e=simplifyGeoJSON(e),console.log("kml2geojson",e),graphicLayer.loadGeoJSON(e,{flyTo:!0}),clearSelectFile()}),clearSelectFile()}):"kmz"==a?kgUtil.toGeoJSON(e).then(function(e){e=simplifyGeoJSON(e),console.log("kmz2geojson",e),graphicLayer.loadGeoJSON(e,{flyTo:!0}),clearSelectFile()}):(window.layer.msg("暂不支持 "+a+" 文件类型的数据！"),clearSelectFile())}function clearSelectFile(){window.addEventListener?document.getElementById("input_draw_file").value="":document.getElementById("input_draw_file").outerHTML+=""}function simplifyGeoJSON(e){try{e=turf.simplify(e,{tolerance:1e-6,highQuality:!0,mutate:!0})}catch(e){}return e}function expGeoJSONFile(){var e;0===graphicLayer.length?window.layer.msg("当前没有标注任何数据，无需保存！"):(e=graphicLayer.toGeoJSON(),haoutil.file.downloadFile("矢量数据GeoJSON.json",JSON.stringify(e)))}function expJSONFile(){var e;0===graphicLayer.length?window.layer.msg("当前没有标注任何数据，无需保存！"):(e=graphicLayer.toJSON(),mars3d.Util.downloadFile("矢量数据构造参数.json",JSON.stringify(e)))}function bindAttributePannel(){$("#graphicTable")&&graphicLayer.readyPromise.then(function(e){getTableData(graphicLayer)}),graphicLayer.on(mars3d.EventType.drawCreated,function(e){$("#hasEdit").is(":checked")&&showEditor(e)}),graphicLayer.on([mars3d.EventType.editStart,mars3d.EventType.editStyle,mars3d.EventType.editAddPoint,mars3d.EventType.editMovePoint,mars3d.EventType.editRemovePoint],function(e){showEditor(e)}),graphicLayer.on([mars3d.EventType.editStop,mars3d.EventType.removeGraphic],function(e){setTimeout(function(){graphicLayer.isEditing||stopEditing()},100)})}var timeTik;function showEditor(e){var e=e.graphic,t=(clearTimeout(timeTik),e._conventStyleJson||(e.options.style=e.toJSON().style,e._conventStyleJson=!0),mars3d.widget.getClass("widgets/plotAttr/widget.js"));t&&t.isActivate?t.startEditing(e,e.coordinates):0===$("#infoview-left").length&&mars3d.widget.activate({map:map,uri:"widgets/plotAttr/widget.js",name:"属性编辑",graphic:e,lonlats:e.coordinates})}function stopEditing(){timeTik=setTimeout(function(){mars3d.widget&&mars3d.widget.disable("widgets/plotAttr/widget.js")},200)}var tableEventTarget=new mars3d.BaseClass;function tableInit(e){$("#graphicTable").bootstrapTable({data:e,pagination:!0,pageList:[3,5,10],singleSelect:!1,checkboxHeader:!1,columns:[{title:"是否显示",field:"show",align:"center",checkbox:!0,width:50,formatter:function(e,t,a){return{checked:!0}}},{field:"name",title:"名称"},{title:"操作",align:"center",width:80,events:{"click .remove":function(e,t,a,i){a=graphicLayer.getGraphicById(a.id);graphicLayer.removeGraphic(a),0<$("#infoview-left").length&&$("#infoview-left").hide()},"click .edit":function(e,t,a,i){a=getGraphic(a.id);0<$("#infoview-left").length?$("#infoview-left").show():showEditor({graphic:a})}},formatter:function(e,t,a){return['<a class="edit" href="javascript:void(0)" title="编辑"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;','<a class="remove" href="javascript:void(0)" title="删除"><i class="fa fa-trash"></i></a>'].join("")}}],onClickRow:function(e){flyToTableItem(e.id)},onCheck:function(e){onSelectTableItem(e.id,!0)},onUncheck:function(e){onSelectTableItem(e.id,!1)}})}function refreshTabel(e){e=getDataByLayer(e);$("#graphicTable").bootstrapTable("load",e)}function removeTableItem(e){$("#graphicTable").bootstrapTable("remove",{field:"id",values:e})}function flyToTableItem(e){e=graphicLayer.getGraphicById(e);e&&e.flyTo()}function onSelectTableItem(e,t){e=graphicLayer.getGraphicById(e);e&&(t?(e.show=!0,e.flyTo()):e.show=!1)}function getTableData(t){t.on(mars3d.EventType.removeGraphic,function(e){removeTableItem(e.graphic.id)}),t.on(mars3d.EventType.drawCreated,function(e){refreshTabel(t)}),tableInit(getDataByLayer(t))}var graphicIndex=0;function getItemName(e){var t;if(null!=e&&null!=(t=e.style)&&null!=(t=t.label)&&t.text)return"".concat(e.type," - ").concat(e.style.label.text);if(!e.name){if(e.attr.remark)return"".concat(e.type," - ").concat(e.attr.remark);e.name="未命名".concat(++graphicIndex)}return"".concat(e.type," - ").concat(e.name)}function getDataByLayer(e){var e=e.getGraphics(),t=[];return e.forEach(function(e){e={id:e.id,name:getItemName(e),type:e.type,show:!0};t.push(e)}),t}
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
+"use script";
+
+//开发环境建议开启严格模式
+
+// 在图层绑定Popup弹窗
+function bindLayerPopup2() {
+  graphicLayer.bindPopup(function (event) {
+    var _event$graphic;
+    var attr = getAttrForEvent(event);
+    attr["类型"] = (_event$graphic = event.graphic) === null || _event$graphic === void 0 ? void 0 : _event$graphic.type;
+    attr["来源"] = "我是layer上绑定的Popup";
+    attr["备注"] = "我支持鼠标交互";
+    return mars3d.Util.getTemplateHtml({
+      title: "矢量图层",
+      template: "all",
+      attr: attr
+    });
+
+    // return new Promise((resolve) => {
+    //   //这里可以进行后端接口请求数据，setTimeout测试异步
+    //   setTimeout(() => {
+    //     resolve('Promise异步回调显示的弹窗内容信息')
+    //   }, 2000)
+    // })
+  }, {
+    pointerEvents: true
+  });
+}
+
+// 绑定右键菜单
+function bindLayerContextMenu2() {
+  graphicLayer.bindContextMenu([{
+    text: "开始编辑对象",
+    icon: "fa fa-edit",
+    show: function show(e) {
+      var graphic = e.graphic;
+      if (!graphic || !graphic.hasEdit) {
+        return false;
+      }
+      return !graphic.isEditing;
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return false;
+      }
+      if (graphic) {
+        graphicLayer.startEditing(graphic);
+      }
+    }
+  }, {
+    text: "停止编辑对象",
+    icon: "fa fa-edit",
+    show: function show(e) {
+      var graphic = e.graphic;
+      if (!graphic || !graphic.hasEdit) {
+        return false;
+      }
+      return graphic.isEditing;
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return false;
+      }
+      if (graphic) {
+        graphic.stopEditing();
+      }
+    }
+  }, {
+    text: "删除对象",
+    icon: "fa fa-trash-o",
+    show: function show(event) {
+      var graphic = event.graphic;
+      if (!graphic || graphic.isDestroy) {
+        return false;
+      } else {
+        return true;
+      }
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return;
+      }
+      var parent = graphic.parent; // 右击是编辑点时
+      graphicLayer.removeGraphic(graphic);
+      if (parent) {
+        graphicLayer.removeGraphic(parent);
+      }
+    }
+  }, {
+    text: "计算长度",
+    icon: "fa fa-medium",
+    show: function show(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return false;
+      }
+      return graphic.type === "polyline" || graphic.type === "polylineP" || graphic.type === "curve" || graphic.type === "curveP" || graphic.type === "polylineVolume" || graphic.type === "polylineVolumeP" || graphic.type === "corridor" || graphic.type === "corridorP" || graphic.type === "wall" || graphic.type === "wallP";
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      var strDis = mars3d.MeasureUtil.formatDistance(graphic.distance);
+      haoutil.alert("该对象的长度为:" + strDis);
+    }
+  }, {
+    text: "计算周长",
+    icon: "fa fa-medium",
+    show: function show(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return false;
+      }
+      return graphic.type === "circle" || graphic.type === "circleP" || graphic.type === "rectangle" || graphic.type === "rectangleP" || graphic.type === "polygon" || graphic.type === "polygonP";
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      var strDis = mars3d.MeasureUtil.formatDistance(graphic.distance);
+      haoutil.alert("该对象的周长为:" + strDis);
+    }
+  }, {
+    text: "计算面积",
+    icon: "fa fa-reorder",
+    show: function show(e) {
+      var graphic = e.graphic;
+      if (!graphic) {
+        return false;
+      }
+      return graphic.type === "circle" || graphic.type === "circleP" || graphic.type === "rectangle" || graphic.type === "rectangleP" || graphic.type === "polygon" || graphic.type === "polygonP" || graphic.type === "scrollWall" || graphic.type === "water";
+    },
+    callback: function callback(e) {
+      var graphic = e.graphic;
+      var strArea = mars3d.MeasureUtil.formatArea(graphic.area);
+      haoutil.alert("该对象的面积为:" + strArea);
+    }
+  }]);
+}
+function getAttrForEvent(event) {
+  var _event$graphic2, _attr;
+  if (event !== null && event !== void 0 && (_event$graphic2 = event.graphic) !== null && _event$graphic2 !== void 0 && _event$graphic2.attr) {
+    return event.graphic.attr;
+  }
+  if (!event.czmObject) {
+    return {};
+  }
+  var attr = event.czmObject._attr || event.czmObject.properties || event.czmObject.attribute;
+  if (attr && attr.type && attr.attr) {
+    attr = attr.attr; // 兼容历史数据,V2内部标绘生产的geojson
+  }
+
+  return (_attr = attr) !== null && _attr !== void 0 ? _attr : {};
+}
+
+//  ***************************** 数据测试 ***********************  //
+// 生成大数据
+function onClickAddRandomGraohic(count) {
+  haoutil.loading.show();
+  var startTime = new Date().getTime();
+  var result = addRandomGraphicByCount(count);
+  haoutil.loading.close();
+  var endTime = new Date().getTime();
+  var usedTime = (endTime - startTime) / 1000; // 两个时间戳相差的毫秒数
+  window.layer.msg("\u751F\u6210".concat(result || count, "\u6761\u6570\u636E\uFF0C\u5171\u8017\u65F6").concat(usedTime.toFixed(2), "\u79D2"));
+  graphicLayer.flyTo({
+    duration: 0,
+    heading: 0,
+    pitch: -40,
+    scale: 1.2
+  });
+}
+//  ***************************** 数据导出 ***********************  //
+// 打开geojson
+function onClickImpFile(file) {
+  var fileName = file.name;
+  var fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length).toLowerCase();
+  if (fileType == "json" || fileType == "geojson") {
+    var reader = new FileReader();
+    reader.readAsText(file, "UTF-8");
+    reader.onloadend = function (e) {
+      var geojson = JSON.parse(this.result);
+      if (geojson.type == "graphic" && geojson.data) {
+        graphicLayer.addGraphic(geojson.data);
+        graphicLayer.flyTo();
+      } else {
+        geojson = simplifyGeoJSON(geojson); //简化geojson的点
+        graphicLayer.loadGeoJSON(geojson, {
+          flyTo: true
+        });
+      }
+      clearSelectFile();
+      refreshTabel(graphicLayer);
+    };
+  } else if (fileType == "kml") {
+    var _reader = new FileReader();
+    _reader.readAsText(file, "UTF-8");
+    _reader.onloadend = function (e) {
+      var strkml = this.result;
+      kgUtil.toGeoJSON(strkml).then(function (geojson) {
+        geojson = simplifyGeoJSON(geojson); //简化geojson的点
+        console.log("kml2geojson", geojson);
+        graphicLayer.loadGeoJSON(geojson, {
+          flyTo: true
+        });
+        clearSelectFile();
+      });
+      clearSelectFile();
+    };
+  } else if (fileType == "kmz") {
+    //加载input文件控件的二进制流
+    kgUtil.toGeoJSON(file).then(function (geojson) {
+      geojson = simplifyGeoJSON(geojson); //简化geojson的点
+      console.log("kmz2geojson", geojson);
+      graphicLayer.loadGeoJSON(geojson, {
+        flyTo: true
+      });
+      clearSelectFile();
+    });
+  } else {
+    window.layer.msg("暂不支持 " + fileType + " 文件类型的数据！");
+    clearSelectFile();
+  }
+}
+function clearSelectFile() {
+  if (!window.addEventListener) {
+    document.getElementById("input_draw_file").outerHTML += ""; //IE
+  } else {
+    document.getElementById("input_draw_file").value = ""; //FF
+  }
+}
+
+//简化geojson的坐标
+function simplifyGeoJSON(geojson) {
+  try {
+    geojson = turf.simplify(geojson, {
+      tolerance: 0.000001,
+      highQuality: true,
+      mutate: true
+    });
+  } catch (e) {
+    //
+  }
+  return geojson;
+}
+
+// 保存geojson
+function expGeoJSONFile() {
+  if (graphicLayer.length === 0) {
+    window.layer.msg("当前没有标注任何数据，无需保存！");
+    return;
+  }
+  var geojson = graphicLayer.toGeoJSON();
+  haoutil.file.downloadFile("矢量数据GeoJSON.json", JSON.stringify(geojson));
+}
+
+// 保存json
+function expJSONFile() {
+  if (graphicLayer.length === 0) {
+    window.layer.msg("当前没有标注任何数据，无需保存！");
+    return;
+  }
+  var geojson = graphicLayer.toJSON();
+  mars3d.Util.downloadFile("矢量数据构造参数.json", JSON.stringify(geojson));
+}
+
+//  ***************************** 属性面板 ***********************  //
+// 绑定事件，激活属性面板
+function bindAttributePannel() {
+  // 初始化表格数据
+  if ($("#graphicTable")) {
+    graphicLayer.readyPromise.then(function (layer) {
+      getTableData(graphicLayer);
+    });
+  }
+  graphicLayer.on(mars3d.EventType.drawCreated, function (e) {
+    var val = $("#hasEdit").is(":checked");
+    if (val) {
+      showEditor(e);
+    }
+  });
+  // 修改了矢量数据
+  graphicLayer.on([mars3d.EventType.editStart, mars3d.EventType.editStyle, mars3d.EventType.editAddPoint, mars3d.EventType.editMovePoint, mars3d.EventType.editRemovePoint], function (e) {
+    showEditor(e);
+  });
+
+  // 停止编辑
+  graphicLayer.on([mars3d.EventType.editStop, mars3d.EventType.removeGraphic], function (e) {
+    setTimeout(function () {
+      if (!graphicLayer.isEditing) {
+        stopEditing();
+      }
+    }, 100);
+  });
+}
+
+//附加：激活属性编辑widget【非必需，可以注释该方法内部代码】
+var timeTik;
+function showEditor(e) {
+  var graphic = e.graphic;
+  clearTimeout(timeTik);
+  if (!graphic._conventStyleJson) {
+    graphic.options.style = graphic.toJSON().style; //因为示例中的样式可能有复杂对象，需要转为单个json简单对象
+    graphic._conventStyleJson = true; //只处理一次
+  }
+
+  var plotAttr = mars3d.widget.getClass("widgets/plotAttr/widget.js");
+  if (plotAttr && plotAttr.isActivate) {
+    plotAttr.startEditing(graphic, graphic.coordinates);
+  } else {
+    // 左侧没有弹出的修改面板时，弹出widget
+    $("#infoview-left").length === 0 && mars3d.widget.activate({
+      map: map,
+      uri: "widgets/plotAttr/widget.js",
+      name: "属性编辑",
+      graphic: graphic,
+      lonlats: graphic.coordinates
+    });
+  }
+}
+function stopEditing() {
+  timeTik = setTimeout(function () {
+    if (mars3d.widget) {
+      mars3d.widget.disable("widgets/plotAttr/widget.js");
+    }
+  }, 200);
+}
+//附加：激活属性编辑widget【非必需，可以注释该方法内部代码】
+
+//  ***************************** 数据列表 ***********************  //
+
+var tableEventTarget = new mars3d.BaseClass();
+function tableInit(data) {
+  $("#graphicTable").bootstrapTable({
+    data: data,
+    pagination: true,
+    pageList: [3, 5, 10],
+    singleSelect: false,
+    checkboxHeader: false,
+    columns: [{
+      title: "是否显示",
+      field: "show",
+      align: "center",
+      checkbox: true,
+      width: 50,
+      formatter: function formatter(value, row, index) {
+        return {
+          checked: true
+        };
+      }
+    }, {
+      field: "name",
+      title: "名称"
+    }, {
+      title: "操作",
+      align: "center",
+      width: 80,
+      events: {
+        "click .remove": function clickRemove(e, value, row, index) {
+          var graphic = graphicLayer.getGraphicById(row.id);
+          graphicLayer.removeGraphic(graphic);
+          if ($("#infoview-left").length > 0) {
+            $("#infoview-left").hide();
+          }
+        },
+        "click .edit": function clickEdit(e, value, row, index) {
+          // const graphic = graphicLayer.getGraphicById(row.id)
+          var graphic = getGraphic(row.id);
+          // 矢量数据不能处于编辑状态，否则点光源示例点击编辑时会失去光
+          // graphic.hasEdit && graphic.startEditing()
+          if ($("#infoview-left").length > 0) {
+            $("#infoview-left").show();
+          } else {
+            showEditor({
+              graphic: graphic
+            });
+          }
+        }
+      },
+      formatter: function formatter(value, row, index) {
+        return ['<a class="edit" href="javascript:void(0)" title="编辑"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;', '<a class="remove" href="javascript:void(0)" title="删除"><i class="fa fa-trash"></i></a>'].join("");
+      }
+    }],
+    //定位区域
+    onClickRow: function onClickRow(row) {
+      flyToTableItem(row.id);
+    },
+    //勾选显示
+    onCheck: function onCheck(row) {
+      onSelectTableItem(row.id, true);
+    },
+    //取消勾选显示
+    onUncheck: function onUncheck(row) {
+      onSelectTableItem(row.id, false);
+    }
+  });
+}
+
+// 更新表格数据
+function refreshTabel(layer) {
+  var newData = getDataByLayer(layer);
+  $("#graphicTable").bootstrapTable("load", newData);
+}
+
+// 删除表格中的指定项
+function removeTableItem(id) {
+  $("#graphicTable").bootstrapTable("remove", {
+    field: "id",
+    values: id
+  });
+}
+
+// tableEventTarget.on("graphicList", function (event) {
+//   tableInit(event.graphicList)
+// })
+// tableEventTarget.on("removeGraphic", function (event) {
+//   removeTableItem(event.graphicId)
+// })
+
+function flyToTableItem(id) {
+  var graphic = graphicLayer.getGraphicById(id);
+  if (graphic) {
+    graphic.flyTo();
+  }
+}
+function onSelectTableItem(id, selected) {
+  var graphic = graphicLayer.getGraphicById(id);
+  if (!graphic) {
+    return;
+  }
+  if (selected) {
+    graphic.show = true;
+    graphic.flyTo();
+  } else {
+    graphic.show = false;
+  }
+}
+
+// 获取图层数据，填充表格数据，同时监听图层操作
+function getTableData(graphicLayer) {
+  graphicLayer.on(mars3d.EventType.removeGraphic, function (event) {
+    var graphicId = event.graphic.id;
+    removeTableItem(graphicId);
+  });
+
+  // 图上标绘触发事件
+  graphicLayer.on(mars3d.EventType.drawCreated, function (event) {
+    refreshTabel(graphicLayer);
+  });
+  var graphicList = getDataByLayer(graphicLayer);
+  tableInit(graphicList);
+}
+var graphicIndex = 0;
+function getItemName(graphic) {
+  var _graphic$style;
+  if (graphic !== null && graphic !== void 0 && (_graphic$style = graphic.style) !== null && _graphic$style !== void 0 && (_graphic$style = _graphic$style.label) !== null && _graphic$style !== void 0 && _graphic$style.text) {
+    return "".concat(graphic.type, " - ").concat(graphic.style.label.text);
+  }
+  if (graphic.name) {
+    return "".concat(graphic.type, " - ").concat(graphic.name);
+  }
+  if (graphic.attr.remark) {
+    return "".concat(graphic.type, " - ").concat(graphic.attr.remark);
+  }
+  graphic.name = "\u672A\u547D\u540D".concat(++graphicIndex);
+  return "".concat(graphic.type, " - ").concat(graphic.name);
+}
+
+// 将layer中的数据转为表格中的数据
+function getDataByLayer(graphicLayer) {
+  var graphics = graphicLayer.getGraphics();
+  var graphicList = [];
+  graphics.forEach(function (graphic) {
+    var itemObj = {
+      id: graphic.id,
+      name: getItemName(graphic),
+      type: graphic.type,
+      show: true
+    };
+    graphicList.push(itemObj);
+  });
+  return graphicList;
+}

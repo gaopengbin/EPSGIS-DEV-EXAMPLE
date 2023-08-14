@@ -1,6 +1,7 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
@@ -9,7 +10,7 @@ var mapOptions = {
       rightDrag: true
     }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -18,13 +19,13 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
   // 限定pitch角度： max ，min(默认-90)
-  map.setPitchRange(-10)
+  map.setPitchRange(-10);
 
   // 设置鼠标操作习惯,更换中键和右键
-  map.changeMouseModel(true)
+  map.changeMouseModel(true);
 }
 
 /**
@@ -32,18 +33,16 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function shadingMaterials(val) {
   if (val === 1) {
     // 设置鼠标操作习惯,更换中键和右键
-    map.changeMouseModel(true)
+    map.changeMouseModel(true);
   } else {
-    map.changeMouseModel(false)
+    map.changeMouseModel(false);
   }
 }
-
 
 // 解除ALT按键的操作
 // const getInputAction_old = Cesium.ScreenSpaceEventHandler.prototype.getInputAction

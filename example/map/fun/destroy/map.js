@@ -1,27 +1,29 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
-  layers: [
-    {
-      type: "geojson",
-      name: "示例数据",
-      url: "//data.mars3d.cn/file/geojson/mars3d-draw.json",
-      popup: "{type} {name}",
-      show: true
+  layers: [{
+    type: "geojson",
+    name: "示例数据",
+    url: "//data.mars3d.cn/file/geojson/mars3d-draw.json",
+    popup: "{type} {name}",
+    show: true
+  }, {
+    type: "3dtiles",
+    name: "测试模型",
+    url: "//data.mars3d.cn/3dtiles/bim-daxue/tileset.json",
+    position: {
+      lng: 116.313536,
+      lat: 31.217297,
+      alt: 80
     },
-    {
-      type: "3dtiles",
-      name: "测试模型",
-      url: "//data.mars3d.cn/3dtiles/bim-daxue/tileset.json",
-      position: { lng: 116.313536, lat: 31.217297, alt: 80 },
-      scale: 100,
-      show: true
-    }
-  ]
-}
+    scale: 100,
+    show: true
+  }]
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -30,11 +32,11 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录首次创建的map
+  map = mapInstance; // 记录首次创建的map
 
   map.on(mars3d.EventType.load, function (event) {
-    console.log(`地图所有图层加载完成`)
-  })
+    console.log("\u5730\u56FE\u6240\u6709\u56FE\u5C42\u52A0\u8F7D\u5B8C\u6210");
+  });
 }
 
 /**
@@ -42,22 +44,20 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  destroyMap()
+  destroyMap();
 }
-
 function createMap() {
   if (map) {
-    globalMsg("地图已存在,请勿重复创建!")
-    return
+    globalMsg("地图已存在,请勿重复创建!");
+    return;
   }
-  map = new mars3d.Map("mars3dContainer", mapOptions)
+  map = new mars3d.Map("mars3dContainer", mapOptions);
 }
-
 function destroyMap() {
   if (!map) {
-    globalMsg("地图已销毁,无需重复销毁!")
-    return
+    globalMsg("地图已销毁,无需重复销毁!");
+    return;
   }
-  map.destroy()
-  map = null
+  map.destroy();
+  map = null;
 }

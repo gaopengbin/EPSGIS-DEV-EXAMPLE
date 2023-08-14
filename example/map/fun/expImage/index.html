@@ -1,37 +1,30 @@
+<!-- 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn -->
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
-    <meta name="author" content="火星科技 http://mars3d.cn " />
-    <meta name="apple-touch-fullscreen" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta name="format-detection" content="telephone=no" />
-    <meta name="x5-fullscreen" content="true" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0">
+    <meta name="author" content="&#x706B;&#x661F;&#x79D1;&#x6280; http://mars3d.cn ">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="x5-fullscreen" content="true">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
     <!-- 标题及搜索关键字 -->
-    <meta name="keywords" content="火星科技,cesium,3D,GIS,marsgis,三维,地球,地图,开发,框架,系统,示例,资料,模型,离线,外包,合肥,安徽,中国" />
-    <meta
-      name="description"
-      content="火星科技 合肥火星 合肥火星科技 合肥火星科技有限公司 leaflet leaflet框架 leaflet开发 cesium cesium开发 cesium框架 三维 地球 模型  gis marsgis 地图离线 地图开发 地图框架 地图外包 框架 开发 外包  地图离线 二维地图 三维地图 全景漫游 地理信息系统 云GIS 三维GIS GIS平台 WebGIS"
-    />
+    <meta name="keywords" content="&#x706B;&#x661F;&#x79D1;&#x6280;,cesium,3D,GIS,marsgis,&#x4E09;&#x7EF4;,&#x5730;&#x7403;,&#x5730;&#x56FE;,&#x5F00;&#x53D1;,&#x6846;&#x67B6;,&#x7CFB;&#x7EDF;,&#x793A;&#x4F8B;,&#x8D44;&#x6599;,&#x6A21;&#x578B;,&#x79BB;&#x7EBF;,&#x5916;&#x5305;,&#x5408;&#x80A5;,&#x5B89;&#x5FBD;,&#x4E2D;&#x56FD;">
+    <meta name="description" content="&#x706B;&#x661F;&#x79D1;&#x6280; &#x5408;&#x80A5;&#x706B;&#x661F; &#x5408;&#x80A5;&#x706B;&#x661F;&#x79D1;&#x6280; &#x5408;&#x80A5;&#x706B;&#x661F;&#x79D1;&#x6280;&#x6709;&#x9650;&#x516C;&#x53F8; leaflet leaflet&#x6846;&#x67B6; leaflet&#x5F00;&#x53D1; cesium cesium&#x5F00;&#x53D1; cesium&#x6846;&#x67B6; &#x4E09;&#x7EF4; &#x5730;&#x7403; &#x6A21;&#x578B;  gis marsgis &#x5730;&#x56FE;&#x79BB;&#x7EBF; &#x5730;&#x56FE;&#x5F00;&#x53D1; &#x5730;&#x56FE;&#x6846;&#x67B6; &#x5730;&#x56FE;&#x5916;&#x5305; &#x6846;&#x67B6; &#x5F00;&#x53D1; &#x5916;&#x5305;  &#x5730;&#x56FE;&#x79BB;&#x7EBF; &#x4E8C;&#x7EF4;&#x5730;&#x56FE; &#x4E09;&#x7EF4;&#x5730;&#x56FE; &#x5168;&#x666F;&#x6F2B;&#x6E38; &#x5730;&#x7406;&#x4FE1;&#x606F;&#x7CFB;&#x7EDF; &#x4E91;GIS &#x4E09;&#x7EF4;GIS GIS&#x5E73;&#x53F0; WebGIS">
 
-    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon/favicon.ico" />
-    <title>场景出图(导出图片) | Mars3D | 三维地图 | 火星科技 | 合肥火星科技有限公司</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon/favicon.ico">
+    <title>&#x573A;&#x666F;&#x51FA;&#x56FE;(&#x5BFC;&#x51FA;&#x56FE;&#x7247;) | Mars3D | &#x4E09;&#x7EF4;&#x5730;&#x56FE; | &#x706B;&#x661F;&#x79D1;&#x6280; | &#x5408;&#x80A5;&#x706B;&#x661F;&#x79D1;&#x6280;&#x6709;&#x9650;&#x516C;&#x53F8;</title>
 
     <!--第三方lib-->
-    <script
-      type="text/javascript"
-      src="/lib/include-lib.js"
-      libpath="/lib/"
-      include="jquery,layer,toastr,font-awesome,bootstrap,layer,haoutil,mars3d"
-    ></script>
+    <script type="text/javascript" src="../../../../lib/include-lib.js" libpath="/lib/" include="jquery,layer,toastr,font-awesome,bootstrap,layer,haoutil,mars3d"></script>
 
     <script type="text/javascript" src="/lib/dom2img/dom-to-image.js"></script>
 
-    <link href="/css/style.css" rel="stylesheet" />
-    <link href="/css/divGraphic.css" rel="stylesheet" />
+    <link href="../../../../../css/style.css" rel="stylesheet">
+    <link href="/css/divGraphic.css" rel="stylesheet">
     <style>
       .infoview {
         width: 213px;
@@ -50,69 +43,63 @@
 
     <div class="infoview">
       <div class="f-mb">
-        <input type="button" class="btn btn-primary" id="showMapImg" value="查看场景出图" />
+        <input type="button" class="btn btn-primary" id="showMapImg" value="&#x67E5;&#x770B;&#x573A;&#x666F;&#x51FA;&#x56FE;">
       </div>
       <div class="f-mb">
-        <input type="button" class="btn btn-primary" id="downLoad2" value="下载场景缩略图" />
+        <input type="button" class="btn btn-primary" id="downLoad2" value="&#x4E0B;&#x8F7D;&#x573A;&#x666F;&#x7F29;&#x7565;&#x56FE;">
       </div>
       <div class="f-mb">
-        <input type="button" class="btn btn-primary" id="downLoad" value="下载场景出图" />
+        <input type="button" class="btn btn-primary" id="downLoad" value="&#x4E0B;&#x8F7D;&#x573A;&#x666F;&#x51FA;&#x56FE;">
       </div>
       <div class="f-mb">
-        <input type="button" class="btn btn-primary" id="downLoadDiv" value="下载场景出图(含DIV部分)" />
+        <input type="button" class="btn btn-primary" id="downLoadDiv" value="&#x4E0B;&#x8F7D;&#x573A;&#x666F;&#x51FA;&#x56FE;(&#x542B;DIV&#x90E8;&#x5206;)">
       </div>
       <div>
-        <img class="f-mb imgShorScreen" id="shotScreenImg"  style="display: none; width:100%" />
-        <input type="button" class="btn btn-primary" id="shotScreenBtn" value="截图" />
+        <img class="f-mb imgShorScreen" id="shotScreenImg" style="display: none; width:100%">
+        <input type="button" class="btn btn-primary" id="shotScreenBtn" value="&#x622A;&#x56FE;">
       </div>
     </div>
 
     <script src="/js/common.js"></script>
     <script src="./map.js"></script>
-    <script type="text/javascript">
-      "use script" //开发环境建议开启严格模式
+    <script type="text/javascript">"use script";
 
-      function initUI(options) {
-
-        // 查看场景出图
-        $("#showMapImg").click(function () {
-          showMapImg().then((image) => {
-            //回调
-            window.layer.open({
-              type: 1,
-              title: "场景出图",
-              skin: "layer-mars-dialog animation-scale-up",
-              resize: true,
-              area: ["50%", "60%"], //宽高
-              content: "<img src=" + image + ' style="width:100%;">'
-            })
-          })
-        })
-
-        $("#downLoad").click(function () {
-          console.log("down");
-          downLoad()
-        })
-
-        $("#downLoad2").click(function () {
-          downLoad2()
-        })
-
-        $("#downLoadDiv").click(function () {
-          downLoadDiv()
-        })
-
-        $("#shotScreenBtn").click(function () {
-          shotScreen()
-        })
-      }
-
-      function shotScreen() {
-        showMapImg().then((image) => {
-          $("#shotScreenImg").show()
-          $("#shotScreenImg").attr("src", image)
-        })
-      }
-    </script>
+//开发环境建议开启严格模式
+function initUI(options) {
+  // 查看场景出图
+  $("#showMapImg").click(function () {
+    showMapImg().then(function (image) {
+      //回调
+      window.layer.open({
+        type: 1,
+        title: "场景出图",
+        skin: "layer-mars-dialog animation-scale-up",
+        resize: true,
+        area: ["50%", "60%"],
+        //宽高
+        content: "<img src=" + image + ' style="width:100%;">'
+      });
+    });
+  });
+  $("#downLoad").click(function () {
+    console.log("down");
+    downLoad();
+  });
+  $("#downLoad2").click(function () {
+    downLoad2();
+  });
+  $("#downLoadDiv").click(function () {
+    downLoadDiv();
+  });
+  $("#shotScreenBtn").click(function () {
+    shotScreen();
+  });
+}
+function shotScreen() {
+  showMapImg().then(function (image) {
+    $("#shotScreenImg").show();
+    $("#shotScreenImg").attr("src", image);
+  });
+}</script>
   </body>
 </html>

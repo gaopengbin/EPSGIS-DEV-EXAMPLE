@@ -1,6 +1,7 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 地图API: http://lbs.tianditu.gov.cn/server/MapService.html
 
@@ -15,7 +16,7 @@ var mapOptions = {
   //   subdomains: "01234567",
   //   show: true,
   // },
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -24,14 +25,14 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
   // 方式2：在创建地球后更新terrainProvider
   map.terrainProvider = new mars3d.provider.TdtTerrainProvider({
     url: "https://t{s}.tianditu.gov.cn/mapservice/swdx",
     key: mars3d.Token.tianditu,
     subdomains: "01234567"
-  })
+  });
 }
 
 /**
@@ -39,10 +40,10 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
 
 // 是否开启三角网
 function checkedTriangulation(enabled) {
-  map.scene.globe._surface.tileProvider._debug.wireframe = enabled // 三角网
+  map.scene.globe._surface.tileProvider._debug.wireframe = enabled; // 三角网
 }

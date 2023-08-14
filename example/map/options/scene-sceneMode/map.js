@@ -1,6 +1,7 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
@@ -11,7 +12,7 @@ var mapOptions = {
       maximumZoomDistance: 300000000
     }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -20,19 +21,21 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
-  let lastCameraView // 记录视角
+  var lastCameraView; // 记录视角
 
   // 切换场景前事件
   map.on(mars3d.EventType.morphStart, function (event) {
-    lastCameraView = map.getCameraView()
-  })
+    lastCameraView = map.getCameraView();
+  });
 
   // 切换场景后事件
   map.on(mars3d.EventType.morphComplete, function (event) {
-    map.setCameraView(lastCameraView, { duration: 0 })
-  })
+    map.setCameraView(lastCameraView, {
+      duration: 0
+    });
+  });
 }
 
 /**
@@ -40,20 +43,20 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
 
 // 切换为二维视图
 function to2d() {
-  map.scene.morphTo2D(0)
+  map.scene.morphTo2D(0);
 }
 
 // 切换为三维视图
 function to3d() {
-  map.scene.morphTo3D(0)
+  map.scene.morphTo3D(0);
 }
 
 // 切换为2.5D维视图
 function toGLB() {
-  map.scene.morphToColumbusView(0)
+  map.scene.morphToColumbusView(0);
 }

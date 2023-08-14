@@ -1,13 +1,20 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 22.149271, lng: 116.950247, alt: 1062553.8, heading: 359.5, pitch: -50.6 }
+    center: {
+      lat: 22.149271,
+      lng: 116.950247,
+      alt: 1062553.8,
+      heading: 359.5,
+      pitch: -50.6
+    }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -16,14 +23,11 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance
-
-  globalNotify("提示", `已对DIV设置CSS : transform: scale(2);。`)
-
-  const layer = new mars3d.layer.GraphicLayer()
-  map.addLayer(layer)
-
-  const point = new mars3d.graphic.PointPrimitive({
+  map = mapInstance;
+  globalNotify("提示", "\u5DF2\u5BF9DIV\u8BBE\u7F6ECSS : transform: scale(2);\u3002");
+  var layer = new mars3d.layer.GraphicLayer();
+  map.addLayer(layer);
+  var point = new mars3d.graphic.PointPrimitive({
     position: [116.337407, 30.977153, 10],
     popup: "这是一个点",
     style: {
@@ -37,8 +41,8 @@ function onMounted(mapInstance) {
         pixelOffsetX: 16
       }
     }
-  })
-  layer.addGraphic(point)
+  });
+  layer.addGraphic(point);
 }
 
 /**
@@ -46,5 +50,5 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }

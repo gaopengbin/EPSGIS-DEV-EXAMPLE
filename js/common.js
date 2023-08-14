@@ -1,2 +1,136 @@
-/* 2023-8-11 09:34:00 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
-var parentGlobal=window.parent||window;function init(){mars3d.Util.webglreport()||mars3d.Util.webglerror(),mars3d.Util.fetchJson({url:"/config/config.json"}).then(function(n){console.log("读取 config.json 配置文件完成",n);n=(window.initMap||globalInitMap)(n.map3d);window.onMounted&&window.onMounted(n),window.initUI&&window.initUI(),mars3d.widget&&initWidget(n)}).catch(function(n){console.log("加载JSON出错",n),globalAlert(n?n.message:"加载JSON出错")})}function globalInitMap(n){return window.mapOptions&&("function"==typeof window.mapOptions?n=window.mapOptions(n)||n:window.mapOptions=n=mars3d.Util.merge(n,window.mapOptions)),new mars3d.Map("mars3dContainer",n)}function initWidget(n){mars3d.widget.init(n,{defaultOptions:{style:"dark",windowOptions:{skin:"layer-mars-dialog animation-scale-up",position:{bottom:50,left:10}}},openAtStart:[{name:"右上角工具栏",uri:"widgets/toolButton/menuBtn.js"}],widgets:[{name:"图层管理",uri:"widgets/manageLayers/widget.js",group:"forlayer",autoCenter:!0,windowOptions:{position:{top:10,bottom:40,left:50}},autoDisable:!1,disableOther:!1}]},"/")}function globalMsg(n){window.layer?window.layer.msg(n):window.toastr?window.toastr.info(n):window.alert(n)}function globalAlert(n,o){window.layer?window.layer.alert(n,{title:o||"提示",skin:"layui-layer-lan layer-mars-dialog",closeBtn:0,anim:0}):window.toastr?window.toastr.info(n,o):window.alert(n)}function globalNotify(n,o){window.toastr?window.toastr.warning(o,n):window.layer?window.layer.alert(o,{title:n||"提示",skin:"layui-layer-lan layer-mars-dialog",closeBtn:0,anim:0}):window.alert(o)}function showLoading(){haoutil.loading.show()}function hideLoading(){haoutil.loading.close()}parentGlobal.XE=XE;
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
+"use script";
+
+var parentGlobal = window.parent || window;
+parentGlobal.XE = XE; // widget中使用
+
+function init() {
+  // 判断webgl支持
+  if (!mars3d.Util.webglreport()) {
+    mars3d.Util.webglerror();
+  }
+  // 读取 config.json 配置文件
+  mars3d.Util.fetchJson({
+    url: "/config/config.json"
+  }).then(function (json) {
+    console.log("读取 config.json 配置文件完成", json); // 打印测试信息
+
+    //创建三维地球场景
+    var initMapFun = window.initMap ? window.initMap : globalInitMap;
+    var map = initMapFun(json.map3d);
+    if (window.onMounted) {
+      window.onMounted(map);
+    }
+    if (window.initUI) {
+      window.initUI();
+    }
+    if (mars3d.widget) {
+      initWidget(map);
+    }
+  })["catch"](function (error) {
+    console.log("加载JSON出错", error);
+    globalAlert(error ? error.message : "加载JSON出错");
+  });
+}
+// init()
+
+// 构造地图主方法【必须】
+function globalInitMap(options) {
+  if (window.mapOptions) {
+    if (typeof window.mapOptions === "function") {
+      options = window.mapOptions(options) || options;
+    } else {
+      window.mapOptions = options = mars3d.Util.merge(options, window.mapOptions);
+    }
+  }
+
+  // 创建三维地球场景
+  return new mars3d.Map("mars3dContainer", options);
+}
+
+//初始化widget相关
+function initWidget(map) {
+  //初始化widget管理器
+  mars3d.widget.init(map, {
+    defaultOptions: {
+      style: "dark",
+      windowOptions: {
+        skin: "layer-mars-dialog animation-scale-up",
+        position: {
+          bottom: 50,
+          left: 10
+        }
+      }
+    },
+    openAtStart: [{
+      name: "右上角工具栏",
+      uri: "widgets/toolButton/menuBtn.js"
+    }],
+    widgets: [{
+      name: "图层管理",
+      uri: "widgets/manageLayers/widget.js",
+      group: "forlayer",
+      autoCenter: true,
+      windowOptions: {
+        position: {
+          top: 10,
+          bottom: 40,
+          left: 50
+        }
+      },
+      autoDisable: false,
+      disableOther: false
+    }]
+  }, "/");
+}
+
+// 调用项目的消息提示（自动消失）
+function globalMsg(content) {
+  if (window.layer) {
+    window.layer.msg(content); // 此方法需要引用layer.js
+  } else if (window.toastr) {
+    window.toastr.info(content); // 此方法需要引用toastr
+  } else {
+    window.alert(content);
+  }
+}
+
+// 调用项目的弹窗提示（手动单击确定关闭窗口）
+function globalAlert(content, title) {
+  if (window.layer) {
+    // 此方法需要引用layer.js
+    window.layer.alert(content, {
+      title: title || "提示",
+      skin: "layui-layer-lan layer-mars-dialog",
+      closeBtn: 0,
+      anim: 0
+    });
+  } else if (window.toastr) {
+    window.toastr.info(content, title); // 此方法需要引用toastr
+  } else {
+    window.alert(content);
+  }
+}
+
+// 调用项目的右上角信息提示（可关闭）
+function globalNotify(title, content) {
+  if (window.toastr) {
+    window.toastr.warning(content, title); // 此方法需要引用toastr
+  } else if (window.layer) {
+    // 此方法需要引用layer.js
+    window.layer.alert(content, {
+      title: title || "提示",
+      skin: "layui-layer-lan layer-mars-dialog",
+      closeBtn: 0,
+      anim: 0
+    });
+  } else {
+    window.alert(content);
+  }
+}
+function showLoading() {
+  haoutil.loading.show();
+}
+function hideLoading() {
+  haoutil.loading.close();
+}

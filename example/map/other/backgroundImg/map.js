@@ -1,13 +1,25 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 36.873519, lng: 106.863496, alt: 19999205, heading: 354, pitch: -89 },
+    center: {
+      lat: 36.873519,
+      lng: 106.863496,
+      alt: 19999205,
+      heading: 354,
+      pitch: -89
+    },
     orderIndependentTranslucency: false,
-    contextOptions: { webgl: { alpha: true } }, // 允许透明，只能Map初始化传入 [关键代码]
+    contextOptions: {
+      webgl: {
+        alpha: true
+      }
+    },
+    // 允许透明，只能Map初始化传入 [关键代码]
     showMoon: false,
     showSkyBox: false,
     showSkyAtmosphere: false,
@@ -18,7 +30,7 @@ var mapOptions = {
       enableLighting: false
     }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -27,7 +39,7 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 }
 
 /**
@@ -35,21 +47,17 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function show() {
-  map.container.style.backgroundImage = "none"
+  map.container.style.backgroundImage = "none";
 }
-
 function show1() {
-  map.container.style.backgroundImage = "url(/img/tietu/backGroundImg.jpg)"
+  map.container.style.backgroundImage = "url(/img/tietu/backGroundImg.jpg)";
 }
-
 function show2() {
-  map.container.style.backgroundImage = "url(//data.mars3d.cn/file/img/world/world.jpg)"
+  map.container.style.backgroundImage = "url(//data.mars3d.cn/file/img/world/world.jpg)";
 }
-
 function show3() {
-  map.container.style.backgroundImage = "url(/img/tietu/bg4.jpg)"
+  map.container.style.backgroundImage = "url(/img/tietu/bg4.jpg)";
 }

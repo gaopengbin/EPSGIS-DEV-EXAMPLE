@@ -1,14 +1,21 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
-let nightVisionEffect
+var map; // mars3d.Map三维地图对象
+var nightVisionEffect;
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 33.591015, lng: 119.032698, alt: 73, heading: 343, pitch: -21 }
+    center: {
+      lat: 33.591015,
+      lng: 119.032698,
+      alt: 73,
+      heading: 343,
+      pitch: -21
+    }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -17,21 +24,23 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 
   // 添加参考三维模型
-  const tiles3dLayer = new mars3d.layer.TilesetLayer({
+  var tiles3dLayer = new mars3d.layer.TilesetLayer({
     url: "//data.mars3d.cn/3dtiles/qx-simiao/tileset.json",
-    position: { alt: 80.6 },
+    position: {
+      alt: 80.6
+    },
     maximumScreenSpaceError: 1,
     dynamicScreenSpaceError: true,
     cullWithChildrenBounds: false
-  })
-  map.addLayer(tiles3dLayer)
+  });
+  map.addLayer(tiles3dLayer);
 
   // 构造效果
-  nightVisionEffect = new mars3d.effect.NightVisionEffect()
-  map.addEffect(nightVisionEffect)
+  nightVisionEffect = new mars3d.effect.NightVisionEffect();
+  map.addEffect(nightVisionEffect);
 }
 
 /**
@@ -39,9 +48,8 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }
-
 function setEffect(val) {
-  nightVisionEffect.enabled = val
+  nightVisionEffect.enabled = val;
 }

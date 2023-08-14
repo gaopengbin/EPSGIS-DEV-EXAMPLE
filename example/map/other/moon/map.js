@@ -1,15 +1,27 @@
+/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 // import * as mars3d from "mars3d"
 
-var map // mars3d.Map三维地图对象
+var map; // mars3d.Map三维地图对象
 
 // 事件对象，用于抛出事件给面板
-var eventTarget = new mars3d.BaseClass()
+var eventTarget = new mars3d.BaseClass();
 
 // 需要覆盖config.json中地图属性参数（当前示例框架中自动处理合并）
 var mapOptions = {
   scene: {
-    center: { lat: 0.590681, lng: -105.909459, alt: 18992377.9, heading: 3.5, pitch: -89.9 },
-    contextOptions: { webgl: { alpha: true } }, // 允许透明，只能Map初始化传入 [关键代码]
+    center: {
+      lat: 0.590681,
+      lng: -105.909459,
+      alt: 18992377.9,
+      heading: 3.5,
+      pitch: -89.9
+    },
+    contextOptions: {
+      webgl: {
+        alpha: true
+      }
+    },
+    // 允许透明，只能Map初始化传入 [关键代码]
     showSun: false,
     showMoon: false,
     showSkyBox: false,
@@ -19,16 +31,14 @@ var mapOptions = {
     }
   },
   // 方式1：在创建地球前的参数中配置
-  basemaps: [
-    {
-      name: "月球地图",
-      icon: "img/basemaps/google_vec.png",
-      type: "xyz",
-      url: "https://moon.bao.ac.cn/gis3globleMarsMoon/tiles/getTiles/MoonTile/2000/jpg/{z}/{reverseY}/{x}",
-      crs: "EPSG:4326",
-      show: true
-    }
-  ],
+  basemaps: [{
+    name: "月球地图",
+    icon: "img/basemaps/google_vec.png",
+    type: "xyz",
+    url: "https://moon.bao.ac.cn/gis3globleMarsMoon/tiles/getTiles/MoonTile/2000/jpg/{z}/{reverseY}/{x}",
+    crs: "EPSG:4326",
+    show: true
+  }],
   terrain: {
     url: "https://moon.bao.ac.cn/gis3globleMarsMoon/tilesets/MoonTerrain/2000/",
     show: true
@@ -37,11 +47,10 @@ var mapOptions = {
     baseLayerPicker: false,
     locationBar: {
       fps: true,
-      template:
-        "<div>海拔：{alt}米</div> <div class='hide700'>层级：{level}</div><div>方向：{heading}°</div> <div>俯仰角：{pitch}°</div><div class='hide700'>视高：{cameraHeight}米</div>"
+      template: "<div>海拔：{alt}米</div> <div class='hide700'>层级：{level}</div><div>方向：{heading}°</div> <div>俯仰角：{pitch}°</div><div class='hide700'>视高：{cameraHeight}米</div>"
     }
   }
-}
+};
 
 /**
  * 初始化地图业务，生命周期钩子函数（必须）
@@ -50,7 +59,7 @@ var mapOptions = {
  * @returns {void} 无
  */
 function onMounted(mapInstance) {
-  map = mapInstance // 记录map
+  map = mapInstance; // 记录map
 }
 
 /**
@@ -58,5 +67,5 @@ function onMounted(mapInstance) {
  * @returns {void} 无
  */
 function onUnmounted() {
-  map = null
+  map = null;
 }

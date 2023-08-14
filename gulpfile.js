@@ -171,30 +171,30 @@ gulp.task("build", (done) => {
                 }
               })
             )
-            .pipe(
-              cheerio({
-                run: function ($, file) {
-                  $("script").each(function () {
-                    // html内联js编译
-                    const script = $(this)
-                    try {
-                      if (!script.attr("src")) {
-                        const scriptHtml = script.html()
-                        const result = babelCore.transformSync(scriptHtml, {
-                          presets: ["@babel/preset-env"],
-                          sourceType: "script",
-                          compact: false
-                        })
-                        script.text(result.code)
-                      }
-                    } catch (err) {
-                      console.log("转换html出错了", err)
-                      throwOnlyCopy(srcPath, srcFile, outFilePath, "html内联js编译错误！")
-                    }
-                  })
-                }
-              })
-            )
+            // .pipe(
+            //   cheerio({
+            //     run: function ($, file) {
+            //       $("script").each(function () {
+            //         // html内联js编译
+            //         const script = $(this)
+            //         try {
+            //           if (!script.attr("src")) {
+            //             const scriptHtml = script.html()
+            //             const result = babelCore.transformSync(scriptHtml, {
+            //               presets: ["@babel/preset-env"],
+            //               sourceType: "script",
+            //               compact: false
+            //             })
+            //             script.text(result.code)
+            //           }
+            //         } catch (err) {
+            //           console.log("转换html出错了", err)
+            //           throwOnlyCopy(srcPath, srcFile, outFilePath, "html内联js编译错误！")
+            //         }
+            //       })
+            //     }
+            //   })
+            // )
             .pipe(header(bannerHtml, bannerData))
             .pipe(gulp.dest(outFilePath))
         } else {

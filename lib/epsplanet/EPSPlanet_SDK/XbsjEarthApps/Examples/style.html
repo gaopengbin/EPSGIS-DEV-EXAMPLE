@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="xbsj-labels" content="Earth起步">
+    </meta>
+    <title>创建地球12</title>
+    <!-- 0 引入js文件 -->
+    <script src="../../XbsjEarth/XbsjEarth.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="earthContainer" style="width: 100%; height: 100%; background: grey">
+    </div>
+    <script>
+        var earth;
+        var bgImagery;
+
+        function startup() {
+            earth = new XE.Earth('earthContainer');
+
+            earth.sceneTree.root = {
+                "children": [
+                    {
+                        "ref": "test2",
+                        "czmObject": {
+                            "xbsjType": "Tileset",
+                            "xbsjGuid": "cc2cece4-18d4-4f22-b15c-b2036caaf700",
+                            "name": "未命名瓦片",
+                            "url": "http://lab.earthsdk.com/model/8028ba40ce5b11eab7a4adf1d6568ff7/tileset.json",
+                            // "xbsjPosition": [
+                            //     2.2008646862494814,
+                            //     1.2189183380537552,
+                            //     146.9999999965875
+                            // ],
+                            "xbsjClippingPlanes": {},
+                            "xbsjCustomShader": {}
+                        }
+                    }
+                ]
+            };
+            let tileset = earth.sceneTree.$refs.test2.czmObject._tileset
+            window.tileset = tileset
+            earth.czm.camera.setView({
+                destination: new Cesium.Cartesian3.fromRadians(2.031459710950953, 0.6964798926141499, 295.78295926951427),
+                orientation: {
+                    //  45°视角
+                    heading: 5.488113622832834,
+                    pitch: -0.8837640213016003,
+                    roll: 0.000003613336716057347
+                }
+            });
+        }
+        window.earth = earth;
+        // 1 XE.ready()会加载Cesium.js等其他资源，注意ready()返回一个Promise对象。
+        XE.ready().then(startup);            
+    </script>
+</body>
+
+</html>

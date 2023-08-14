@@ -1,4 +1,4 @@
-/* 2023-8-14 06:23:05 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
+/* 2023-8-14 06:54:41 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 var styleConfig = {
   // 点状
   label: {

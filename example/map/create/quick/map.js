@@ -1,4 +1,4 @@
-/* 2023-8-14 06:23:04 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
+/* 2023-8-14 06:54:40 | 版权所有 山维科技 http://www.sunwaysurvey.com.cn */
 function initMap() {
   // 创建三维地球场景
   var earth = new XE.Earth("earthContainer");

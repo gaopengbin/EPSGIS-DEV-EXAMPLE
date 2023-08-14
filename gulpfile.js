@@ -126,10 +126,10 @@ gulp.task("build", (done) => {
         break
       case ".html":
         if (srcFile.indexOf('example') !== -1) {
-          let relativePathJS = path.relative(srcFile, 'lib/include-lib.js')
+          let relativePathJS = path.relative(srcFile, 'js/common.js')
           let relativePathCSS = path.relative(srcFile, 'css/style.css')
           // console.log('relativePath', srcPath, srcFile, relativePathJS);
-          relativePathJS = relativePathJS.slice(3)
+          // relativePathJS = relativePathJS.slice(3)
           // relativePathCSS = relativePathCSS.slice(3)
           // 反斜杠转换为正斜杠
           relativePathJS = relativePathJS.replace(/\\/g, '/')
@@ -140,8 +140,14 @@ gulp.task("build", (done) => {
             })
             .pipe(
               replace(
-                '/lib/include-lib.js',
+                '/js/common.js',
                 relativePathJS,
+              )
+            )
+            .pipe(
+              replace(
+                '/lib/',
+                './lib/',
               )
             )
             .pipe(

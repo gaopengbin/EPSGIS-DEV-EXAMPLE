@@ -125,6 +125,7 @@ gulp.task("build", (done) => {
           .pipe(gulp.dest(outFilePath))
         break
       case ".html":
+        // 处理htmljs css的引用路径
         if (srcFile.indexOf('example') !== -1) {
           let relativePathJS = path.relative(srcFile, 'js/common.js')
           let relativePathCSS = path.relative(srcFile, 'css/style.css')

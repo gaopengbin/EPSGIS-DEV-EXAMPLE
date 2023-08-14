@@ -12,6 +12,7 @@
 lib/CesiumUnminified/
 lib/Cesium-1.*/
 mars3d-*src.*
+lib/epsplanet/EPSPlanet_SDK0
 
 # profiling files
 chrome-profiler-events*.json

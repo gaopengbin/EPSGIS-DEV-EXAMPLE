@@ -5,28 +5,31 @@ const fileQueen = []
 
 const inputDir = path.resolve("./example")
 
-;(async function () {
-  readFolder(inputDir)
-  while (fileQueen.length > 0) {
-    const fPath = fileQueen.shift()
-    const codeBuffer = await fs.readFileSync(fPath)
-    let code = codeBuffer.toString()
-    // 替换let const
-    code = code.replace(new RegExp("export let ", "gm"), "var ")
-    code = code.replace(new RegExp("export const ", "gm"), "var ")
+  ; (async function () {
+    readFolder(inputDir)
+    while (fileQueen.length > 0) {
+      const fPath = fileQueen.shift()
+      const codeBuffer = await fs.readFileSync(fPath)
+      let code = codeBuffer.toString()
+      console.log("code:", code)
+      // 替换let const
+      code = code.replace(new RegExp("export let ", "gm"), "var ")
+      code = code.replace(new RegExp("export const ", "gm"), "var ")
 
-    // 浏览器中运行时，删除export import
-    code = code.replace(new RegExp("export ", "gm"), "")
-    code = code.replace(new RegExp("import ", "gm"), "// import ")
+      // 浏览器中运行时，删除export import
+      code = code.replace(new RegExp("export ", "gm"), "")
+      code = code.replace(new RegExp("import ", "gm"), "// import ")
 
-    // 删除const L = mars2d.L
-    code = code.replace("const L = mars2d.L", "")
-    // 删除const Cesium = mars3d.Cesium
-    code = code.replace("const Cesium = mars3d.Cesium", "")
-    
-    fs.writeFileSync(fPath, code)
-  }
-})()
+      // code = code.replace("/lib/include-lib.js", "/test/lib/include-lib.js")
+      // code = code.replace("/css/style.css", "/test/css/style.css")
+      // code += fPath
+      // 删除const Cesium = mars3d.Cesium
+      code = code.replace("const Cesium = mars3d.Cesium", "")
+
+      // fs.writeFileSync(fPath, code)
+      fs.writeFileSync(fPath, code)
+    }
+  })()
 
 function readFolder(dir) {
   const files = fs.readdirSync(dir)
@@ -37,6 +40,9 @@ function readFolder(dir) {
     if (stat.isFile()) {
       // 文件
       if (name === "map.js") {
+        fileQueen.push(fullPath)
+      }
+      if (name === "index.html") {
         fileQueen.push(fullPath)
       }
     } else if (stat.isDirectory()) {

@@ -12,9 +12,13 @@ const header = require("gulp-header")
 const htmlmin = require("gulp-htmlmin")
 const cheerio = require("gulp-cheerio")
 const cssmin = require("gulp-clean-css")
+const htmlreplace = require("gulp-html-replace")
+const replace = require("gulp-replace")
 
 const fs = require("fs")
 const path = require("path")
+
+const BASE_URL = "/test"
 
 //////////////////////////以下参数可以根据实际情况调整/////////////////////
 const copyright = "版权所有 山维科技 http://www.sunwaysurvey.com.cn"
@@ -44,7 +48,8 @@ const noCopyPathDef = [
 ]
 
 //定义不做压缩混淆直接拷贝的目录
-const noPipePathDef = ["lib","example"]
+const noPipePathDef = ["lib"]
+// const noPipePathDef = ["lib","example"]
 ////////////////////自定义设置////////////////////
 
 //需要压缩混淆的根目录
@@ -109,72 +114,140 @@ gulp.task("build", (done) => {
               compact: false
             })
           )
-          .pipe(
-            uglify().on("error", function () {
-              this.emit("end")
-              throwOnlyCopy(srcPath, srcFile, outFilePath, err)
-            })
-          )
+          // js压缩混淆
+          // .pipe(
+          //   uglify().on("error", function () {
+          //     this.emit("end")
+          //     throwOnlyCopy(srcPath, srcFile, outFilePath, err)
+          //   })
+          // )
           .pipe(header(banner, bannerData))
           .pipe(gulp.dest(outFilePath))
         break
       case ".html":
-        gulp
-          .src(srcFile, {
-            base: srcPath
-          })
-          .pipe(
-            plumber({
-              errorHandler: function (err) {
-                throwOnlyCopy(srcPath, srcFile, outFilePath, err)
-              }
+        if (srcFile.indexOf('example') !== -1) {
+          let relativePathJS = path.relative(srcFile, 'lib/include-lib.js')
+          let relativePathCSS = path.relative(srcFile, 'css/style.css')
+          // console.log('relativePath', srcPath, srcFile, relativePathJS);
+          relativePathJS = relativePathJS.slice(3)
+          // relativePathCSS = relativePathCSS.slice(3)
+          // 反斜杠转换为正斜杠
+          relativePathJS = relativePathJS.replace(/\\/g, '/')
+          relativePathCSS = relativePathCSS.replace(/\\/g, '/')
+          gulp
+            .src(srcFile, {
+              base: srcPath
             })
-          )
-          .pipe(
-            utf8Convert({
-              encNotMatchHandle: function (file) {
-                throwOnlyCopy(srcPath, srcFile, outFilePath, " 编码可能不是utf-8，避免乱码请检查！")
-              }
-            })
-          )
-          .pipe(
-            cheerio({
-              run: function ($, file) {
-                $("script").each(function () {
-                  // html内联js编译
-                  const script = $(this)
-                  try {
-                    if (!script.attr("src")) {
-                      const scriptHtml = script.html()
-                      const result = babelCore.transformSync(scriptHtml, {
-                        presets: ["@babel/preset-env"],
-                        sourceType: "script",
-                        compact: false
-                      })
-                      script.text(result.code)
+            .pipe(
+              replace(
+                '/lib/include-lib.js',
+                relativePathJS,
+              )
+            )
+            .pipe(
+              replace(
+                '/css/style.css',
+                relativePathCSS,
+              )
+            )
+            .pipe(
+              plumber({
+                errorHandler: function (err) {
+                  throwOnlyCopy(srcPath, srcFile, outFilePath, err)
+                }
+              })
+            )
+            .pipe(
+              utf8Convert({
+                encNotMatchHandle: function (file) {
+                  throwOnlyCopy(srcPath, srcFile, outFilePath, " 编码可能不是utf-8，避免乱码请检查！")
+                }
+              })
+            )
+            .pipe(
+              cheerio({
+                run: function ($, file) {
+                  $("script").each(function () {
+                    // html内联js编译
+                    const script = $(this)
+                    try {
+                      if (!script.attr("src")) {
+                        const scriptHtml = script.html()
+                        const result = babelCore.transformSync(scriptHtml, {
+                          presets: ["@babel/preset-env"],
+                          sourceType: "script",
+                          compact: false
+                        })
+                        script.text(result.code)
+                      }
+                    } catch (err) {
+                      console.log("转换html出错了", err)
+                      throwOnlyCopy(srcPath, srcFile, outFilePath, "html内联js编译错误！")
                     }
-                  } catch (err) {
-                    console.log("转换html出错了", err)
-                    throwOnlyCopy(srcPath, srcFile, outFilePath, "html内联js编译错误！")
-                  }
-                })
-              }
+                  })
+                }
+              })
+            )
+            .pipe(header(bannerHtml, bannerData))
+            .pipe(gulp.dest(outFilePath))
+        } else {
+          gulp
+            .src(srcFile, {
+              base: srcPath
             })
-          )
-          .pipe(
-            htmlmin({
-              collapseWhitespace: true, //清除空格，压缩html，作用比较大，引起的改变压缩量也特别大
-              collapseBooleanAttributes: true, //省略布尔属性的值，比如：<input checked="checked"/>,那么设置这个属性后，就会变成 <input checked/>
-              removeComments: true, //清除html中注释
-              removeEmptyAttributes: true, //清除所有的空属性
-              removeScriptTypeAttributes: true, //清除所有script标签中的type="text/javascript"属性
-              removeStyleLinkTypeAttributes: true, //清楚所有Link标签上的type属性
-              minifyJS: true, //压缩html中的javascript代码
-              minifyCSS: true //压缩html中的css代码
-            })
-          )
-          .pipe(header(bannerHtml, bannerData))
-          .pipe(gulp.dest(outFilePath))
+            .pipe(
+              plumber({
+                errorHandler: function (err) {
+                  throwOnlyCopy(srcPath, srcFile, outFilePath, err)
+                }
+              })
+            )
+            .pipe(
+              utf8Convert({
+                encNotMatchHandle: function (file) {
+                  throwOnlyCopy(srcPath, srcFile, outFilePath, " 编码可能不是utf-8，避免乱码请检查！")
+                }
+              })
+            )
+            .pipe(
+              cheerio({
+                run: function ($, file) {
+                  $("script").each(function () {
+                    // html内联js编译
+                    const script = $(this)
+                    try {
+                      if (!script.attr("src")) {
+                        const scriptHtml = script.html()
+                        const result = babelCore.transformSync(scriptHtml, {
+                          presets: ["@babel/preset-env"],
+                          sourceType: "script",
+                          compact: false
+                        })
+                        script.text(result.code)
+                      }
+                    } catch (err) {
+                      console.log("转换html出错了", err)
+                      throwOnlyCopy(srcPath, srcFile, outFilePath, "html内联js编译错误！")
+                    }
+                  })
+                }
+              })
+            )
+            .pipe(
+              htmlmin({
+                collapseWhitespace: true, //清除空格，压缩html，作用比较大，引起的改变压缩量也特别大
+                collapseBooleanAttributes: true, //省略布尔属性的值，比如：<input checked="checked"/>,那么设置这个属性后，就会变成 <input checked/>
+                removeComments: true, //清除html中注释
+                removeEmptyAttributes: true, //清除所有的空属性
+                removeScriptTypeAttributes: true, //清除所有script标签中的type="text/javascript"属性
+                removeStyleLinkTypeAttributes: true, //清楚所有Link标签上的type属性
+                minifyJS: true, //压缩html中的javascript代码
+                minifyCSS: true //压缩html中的css代码
+              })
+            )
+            .pipe(header(bannerHtml, bannerData))
+            .pipe(gulp.dest(outFilePath))
+        }
         break
       case ".css":
         gulp
